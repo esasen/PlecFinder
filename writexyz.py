@@ -3,6 +3,7 @@ import sys,os
 from cycler import cycler
 from FileRead import FileRead
 
+sys.path.append('src')
 import ReadState as rs
 import state2topol as s2p
 

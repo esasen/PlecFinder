@@ -7,6 +7,7 @@ from numba import jit
 import plottopol as ptop
 import plecfinder as pf
 
+sys.path.append('src')
 import ReadState as rs
 
 ########################################################################
