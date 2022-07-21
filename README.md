@@ -3,6 +3,36 @@ Analyzes the topology of polymer configurations
 
 
 
+Topology Dictionary Keys:
+- N :         number of chain segments
+- L : Length of chain
+- plecs :     list of plectonemes
+- wr :  total writhe in configuration
+- num_plecs :  number of plectonemes
+- num_branches :  list of branches
+- num_tracers :  list of tracers
+- branches :  list of branches
+- tracers :  list of tracers
+- wm : writhe map (this key is optional)
+
+    topol['L']              = len(WM)*disc_len
+    topol['disc_len']       = disc_len
+
+Elements of the plectoneme list are dictionaries themselves. The keys are
+- id1 : entrance index
+- id2 : exit index
+- wrdens : writhe density within plectoneme
+- wr : total writhe in plectoneme
+- num_segs : number of contained segments
+- 
+
+
+        plecdict['id1']         = int(plec[0])
+        plecdict['id2']         = int(plec[1])
+        plecdict['wrdens']      = plec[2]
+        plecdict['wr']          = plec[3]
+        plecdict['num_segs']    = int(plec[4])
+        plecdict['branch_ids']  = [int(bid) for bid in contained_branch_ids[int(plec[6])]]
 
 
 
