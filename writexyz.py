@@ -1,7 +1,5 @@
 import numpy as np
 import sys,os
-from cycler import cycler
-from FileRead import FileRead
 
 sys.path.append('src')
 import ReadState as rs
@@ -57,8 +55,6 @@ def addtopology2xyz(xyz,topol,colorby='plectoneme'):
     """
     
     atom_types = ['C','N','O','K','F','P','S']
-    atc        = cycler(atomtype=atom_types)
-
     curr_type_id = 0
     
     if len(xyz['types']) != topol['N']:
@@ -66,29 +62,32 @@ def addtopology2xyz(xyz,topol,colorby='plectoneme'):
     
     if colorby.lower() in ['plec','plectoneme','plecs','plectonemes']:
         plecs = topol['plecs']
-        for plec,atype in zip(plecs,atc):
+        for plec in plecs:
             id1 = plec['id1']
             id2 = plec['id2']
-            at = atype['atomtype']
+            at = atom_types[curr_type_id]
+            curr_type_id = (curr_type_id+1)%len(atom_types)
+
             xyz['types'][id1:id2+1] = [at for i in range(id2-id1+1)]
-            curr_type_id += 1
+            
 
         
     elif colorby.lower() in ['branch','branches']:
         branches = topol['branches']
-        # ~ for branch in branches:
-        for branch,atype in zip(branches,atc):
+        
+        for branch in branches:
             x1 = branch['x1']
             x2 = branch['x2']
             y1 = branch['y1']
             y2 = branch['y2']
             
-            at = atype['atomtype']
-            print(at)
-            print(x1,x2+1)
+            at = atom_types[curr_type_id]
+            curr_type_id = (curr_type_id+1)%len(atom_types)
+            # ~ print("#######")
+            # ~ print(at)
+            # ~ print(x1,x2+1)
             xyz['types'][x1:x2+1] = [at for i in range(x2-x1+1)]
             xyz['types'][y1:y2+1] = [at for i in range(y2-y1+1)]
-            curr_type_id += 1
     return xyz
     
     
@@ -122,9 +121,9 @@ if __name__ == "__main__":
 
     state = rs.ReadState(statefn)
     
-    snap    = 80
+    snap    = 35
     colorby = 'branch'
-    colorby = 'plectoneme'
+    # ~ colorby = 'plectoneme'
     
     xyzfn = statefn.replace('.state','.xyz')
     gen_topol_snapshot(xyzfn,state['pos'][snap],topols[snap],colorby=colorby)

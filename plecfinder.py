@@ -9,8 +9,13 @@ from numba import jit
 ########################################################################
 ########################################################################
 
+relpath = os.path.relpath(os.path.dirname(__file__),os.getcwd()) 
+cwmpath = os.path.join(relpath,'CalWM')
+sys.path.append(cwmpath)
+
+
+
 WM_METHOD = 'python'
-sys.path.append('CalWM')
 try:
     import cythonWM as cwm 
     WM_METHOD = 'cython'

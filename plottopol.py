@@ -61,32 +61,6 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
              alpha=0.5))   
         ax1.fill_between([branch['y1'],branch['y2']], [branch['x1'],branch['x1']],[branch['x2'],branch['x2']],alpha=0.5,color=colors[i])
              
-    # ~ for branch in branches:
-        # ~ ax1.add_patch(Rectangle((branch[0],branch[2]), (branch[1]-branch[0]), (branch[3]-branch[2]),
-             # ~ edgecolor = 'black',
-             # ~ facecolor = 'none',
-             # ~ fill=False,
-             # ~ lw=1,
-             # ~ alpha=0.5))
-        # ~ ax1.fill_between([branch[0],branch[1]], [branch[2],branch[2]],[branch[3],branch[3]],alpha=0.5)
-
-        # ~ ax1.add_patch(Rectangle((branch[2],branch[0]), (branch[3]-branch[2]), (branch[1]-branch[0]),
-             # ~ edgecolor = 'black',
-             # ~ facecolor = 'none',
-             # ~ fill=False,
-             # ~ lw=1,
-             # ~ alpha=0.5))   
-        
-             
-    # ~ for plec in combbranches:
-        # ~ ax1.add_patch(Rectangle((plec[0],plec[2]), (plec[1]-plec[0]), (plec[3]-plec[2]),
-             # ~ edgecolor = 'black',
-             # ~ facecolor = 'none',
-             # ~ fill=False,
-             # ~ lw=1,
-             # ~ ls='--',
-             # ~ alpha=1))
-    
     for plec in topol['plecs']:
         ax1.add_patch(Rectangle((plec['id1'],plec['id1']), (plec['id2']-plec['id1']), (plec['id2']-plec['id1']),
              edgecolor = 'black',
@@ -95,14 +69,11 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
              lw=1,
              alpha=1))
         
-        # ~ midpoint = (plec['id1']+plec['id2'])*0.5
-        # ~ ax1.text(midpoint, plec['id2']+N*0.02, r'$Wr = %.2f$'%topol['wr'], 
-            # ~ verticalalignment='bottom', horizontalalignment='center',fontsize=label_fontsize)
-        
         midpoint = (0.2*plec['id1']+0.8*plec['id2'])
         ax1.text(midpoint, plec['id2']+N*0.01, r'$Wr = %.2f$'%plec['wr'], 
             verticalalignment='bottom', horizontalalignment='right',fontsize=label_fontsize)
-            
+        
+        # boundary text    
         # ~ ax1.text(plec['id1'], plec['id1']-N*0.01, r'$%d$'%plec['id1'], 
             # ~ verticalalignment='top', horizontalalignment='left',fontsize=tick_labelsize)
         # ~ ax1.text(plec['id2'], plec['id1']-N*0.01, r'$%d$'%plec['id2'], 
