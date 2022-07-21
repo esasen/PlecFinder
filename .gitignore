@@ -1,0 +1,14 @@
+# ignore bin directory
+test/
+
+# ignore build directories
+**build/
+
+# ignore pycache
+**__pycache__
+
+# ignore all .so files
+**.so
+
+# ignore all .c files
+**.c
