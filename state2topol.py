@@ -15,7 +15,7 @@ import ReadState as rs
 
 def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,connect_dist: float,no_branch_overlap=True,om0=1.76,plot_every=0,save_topol=False,load_topol=False,include_wm=False):
     
-    plec_fn = statefn.replace('.state',('_plecs_mwd%s_mwr%s_cd%s'%(min_writhe_density,min_writhe,connect_dist)).replace('.','p'))
+    plec_fn = statefn.replace('.state',('_topols_mwd%s_mwr%s_cd%s'%(min_writhe_density,min_writhe,connect_dist)).replace('.','p'))
     
     # load from file
     if load_topol:
