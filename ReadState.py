@@ -62,7 +62,6 @@ def LoadState(filename):
             SavePos(triads_fnpy,state['triads'])
         if state['Omegas_contained']:
             SavePos(Omegas_fnpy,state['Omegas'])
-            
     return state
 
 def ReadSpec(filename):

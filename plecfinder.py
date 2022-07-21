@@ -72,11 +72,11 @@ def find_plectonemes(config: np.ndarray,min_writhe_density: float,plec_min_writh
                 - N :         number of chain segments
                 - L : Length of chain
                 - disc_len : discretization length (segment size)
-                - plecs :     list of plectonemes
                 - wr :  total writhe in configuration
                 - num_plecs :  number of plectonemes
                 - num_branches :  list of branches
                 - num_tracers :  list of tracers
+                - plecs :     list of plectonemes
                 - branches :  list of branches
                 - tracers :  list of tracers
                 - wm : writhe map (this key is optional)
@@ -158,10 +158,10 @@ def find_plectonemes(config: np.ndarray,min_writhe_density: float,plec_min_writh
         tracerdict = dict()
         
         branchdict['id'] = i
-        branchdict['x1'] = branch[0]
-        branchdict['x2'] = branch[1]
-        branchdict['y1'] = branch[2]
-        branchdict['y2'] = branch[3]
+        branchdict['x1'] = int(branch[0])
+        branchdict['x2'] = int(branch[1])
+        branchdict['y1'] = int(branch[2])
+        branchdict['y2'] = int(branch[3])
         
         tracerdict['id']     = i
         tracerdict['points'] = [[pt[0],pt[1]] for pt in tracers[i]]
