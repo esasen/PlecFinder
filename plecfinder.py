@@ -133,7 +133,7 @@ def find_plectonemes(config: np.ndarray,min_writhe_density: float,plec_min_writh
             branches,tracers = _remove_flagged_branches(branches,tracers)
         
         # collect branches into plectonemes
-        combbranches,contained_branch_ids = combine_branches(pWM,branches,min_writhe_density,disc_len,om0)
+        combbranches,contained_branch_ids = _combine_branches(pWM,branches,min_writhe_density,disc_len,om0)
         plecs                             = _define_plecs(pWM,combbranches,min_writhe_density,plec_min_writhe,disc_len,om0)
         plec_branch_ids                   = [contained_branch_ids[int(plec[6])] for plec in plecs]
     else:
@@ -324,7 +324,7 @@ def _find_branches(WM: np.ndarray,min_writhe_density: float ,disc_len: float, co
         xlim = tracer_xlims[i]
         ylim = tracer_ylims[i]
         wr = np.sum(WM[int(xlim[0]):int(xlim[1])+1,int(ylim[0]):int(ylim[1])+1])*2
-        l_plec = maxint(xlim[1]-xlim[0]+1,ylim[1]-ylim[0]+1)*disc_len
+        l_plec = _maxint(xlim[1]-xlim[0]+1,ylim[1]-ylim[0]+1)*disc_len
         wrdens = wr2dens_conv_fac*wr/l_plec
         if wrdens < min_writhe_density:
             continue
@@ -459,10 +459,10 @@ def _remove_branch_overlap(WM: np.ndarray,branches):
             ylim1 = branches[i][2:4]
             xlim2 = branches[j][0:2]
             ylim2 = branches[j][2:4]
-            ylim1,ylim2 = remove_branchpair_overlap(WM,xlim1,xlim2,ylim1,ylim2)
-            xlim1,ylim2 = remove_branchpair_overlap(WM,ylim1,xlim2,xlim1,ylim2)
-            ylim1,xlim2 = remove_branchpair_overlap(WM,xlim1,ylim2,ylim1,xlim2)
-            xlim1,xlim2 = remove_branchpair_overlap(WM,ylim1,ylim2,xlim1,xlim2)
+            ylim1,ylim2 = _remove_branchpair_overlap(WM,xlim1,xlim2,ylim1,ylim2)
+            xlim1,ylim2 = _remove_branchpair_overlap(WM,ylim1,xlim2,xlim1,ylim2)
+            ylim1,xlim2 = _remove_branchpair_overlap(WM,xlim1,ylim2,ylim1,xlim2)
+            xlim1,xlim2 = _remove_branchpair_overlap(WM,ylim1,ylim2,xlim1,xlim2)
             
             branches[i][0:2] = xlim1
             branches[i][2:4] = ylim1
@@ -476,7 +476,7 @@ def _remove_branch_overlap(WM: np.ndarray,branches):
     return branches
 
 @jit(nopython=True,cache=True) 
-def remove_branchpair_overlap(WM,xlim1,xlim2,ylim1,ylim2):
+def _remove_branchpair_overlap(WM,xlim1,xlim2,ylim1,ylim2):
 
     lim1 = ylim1
     lim2 = ylim2
@@ -552,7 +552,7 @@ def remove_branchpair_overlap(WM,xlim1,xlim2,ylim1,ylim2):
 ########################################################################
 
 @jit(nopython=True,cache=True)
-def minint(a: int,b: int) -> int:
+def _minint(a: int,b: int) -> int:
     """
         return minimum of two args
     """
@@ -561,7 +561,7 @@ def minint(a: int,b: int) -> int:
     return b
     
 @jit(nopython=True,cache=True)
-def maxint(a: int,b: int) -> int:
+def _maxint(a: int,b: int) -> int:
     """
         return maximum of two args
     """
@@ -570,13 +570,13 @@ def maxint(a: int,b: int) -> int:
     return b
 
 @jit(nopython=True,cache=True)
-def is_downstream(a1,a2,b1,b2):
+def _is_downstream(a1,a2,b1,b2):
     if (a1 <= b1 <= a2) and (a1 <= b2 <= a2):
         return True
     return False
     
 @jit(nopython=True,cache=True)
-def cal_branch_writhe(WM,branch):
+def _cal_branch_writhe(WM,branch):
     X1 = 0
     X2 = 1
     Y1 = 2
@@ -584,13 +584,13 @@ def cal_branch_writhe(WM,branch):
     return np.sum(WM[int(branch[X1]):int(branch[X2])+1,int(branch[Y1]):int(branch[Y2])+1])
 
 @jit(nopython=True,cache=True)
-def can_connect_downstream_branches(a1,a2,b1,b2,WM,minwr_per_seg):
+def _can_connect_downstream_branches(a1,a2,b1,b2,WM,minwr_per_seg):
     a1 = int(a1)
     a2 = int(a2)
     b1 = int(b1)
     b2 = int(b2)
     
-    if not is_downstream(a1,a2,b1,b2):
+    if not _is_downstream(a1,a2,b1,b2):
         return False
     
     wr = 0
@@ -598,7 +598,7 @@ def can_connect_downstream_branches(a1,a2,b1,b2,WM,minwr_per_seg):
     wr += np.sum(WM[a1:b1,   0:b2+1])
     wr += np.sum(WM[b1:  ,b2+1:a2+1])
     
-    num_segs = maxint(b1-a1,a2-b2)
+    num_segs = _maxint(b1-a1,a2-b2)
     wr_per_seg = wr/num_segs
 
     if wr_per_seg > minwr_per_seg:
@@ -606,7 +606,7 @@ def can_connect_downstream_branches(a1,a2,b1,b2,WM,minwr_per_seg):
     return False
     
 @jit(nopython=True,cache=True)
-def combine_branches(WM,branches,min_writhe_density,disc_len,om0):
+def _combine_branches(WM,branches,min_writhe_density,disc_len,om0):
     """
         combine downstream branches
     """
@@ -633,20 +633,20 @@ def combine_branches(WM,branches,min_writhe_density,disc_len,om0):
             b1 = plec[X2]
             b2 = plec[Y1]
             
-            if is_downstream(a1,a2,p1,p2):
+            if _is_downstream(a1,a2,p1,p2):
                 new_plec = False
                 contained_branch_ids[j].append(i)
                 
-                if is_downstream(b1,b2,p1,p2):
-                    if can_connect_downstream_branches(a1,a2,p1,p2,WM,minwr_per_seg):
-                        plec[X2] = maxint(plec[X2],branches[i][X2])
-                        plec[Y1] = minint(plec[Y1],branches[i][Y1])
+                if _is_downstream(b1,b2,p1,p2):
+                    if _can_connect_downstream_branches(a1,a2,p1,p2,WM,minwr_per_seg):
+                        plec[X2] = _maxint(plec[X2],branches[i][X2])
+                        plec[Y1] = _minint(plec[Y1],branches[i][Y1])
                     else:
-                        if cal_branch_writhe(WM,branches[i]) > cal_branch_writhe(WM,plec):
+                        if _cal_branch_writhe(WM,branches[i]) > _cal_branch_writhe(WM,plec):
                             plec = branches[i]
                 else:
-                    plec[X2] = maxint(plec[X2],branches[i][X2])
-                    plec[Y1] = minint(plec[Y1],branches[i][Y1])
+                    plec[X2] = _maxint(plec[X2],branches[i][X2])
+                    plec[Y1] = _minint(plec[Y1],branches[i][Y1])
                 break
                 
         if new_plec:
@@ -676,7 +676,7 @@ def _define_plecs(WM,combbranches,min_writhe_density,min_writhe,disc_len,om0):
     
     plecs           = list()
     for i,candidate_plec in enumerate(candidate_plecs):
-        wr          = cal_branch_writhe(WM,candidate_plec)
+        wr          = _cal_branch_writhe(WM,candidate_plec)
         num_segs    = (candidate_plec[1]-candidate_plec[0]+1)
         l_plec      = num_segs*disc_len
         if l_plec <= 0:
