@@ -87,15 +87,16 @@ if __name__ == "__main__":
     load_topol = True
     save_topol = True
     
-    statefn         = sys.argv[1]
-    min_wd          = float(sys.argv[2])
-    min_writhe      = float(sys.argv[3])
-    connect_dist    = float(sys.argv[4])
-    plot_every = 0
-    if len(sys.argv) > 5:
-        plot_every = int(sys.argv[5])
+    min_wd          = float(sys.argv[1])
+    min_writhe      = float(sys.argv[2])
+    connect_dist    = float(sys.argv[3])
+    plot_every      = int(sys.argv[4])
+    statefns        = sys.argv[5:]
     
-    t1 = time.time()
-    state2plecs(statefn, min_wd, min_writhe = min_writhe,connect_dist=connect_dist,om0=om0,plot_every=plot_every,save_topol=save_topol,load_topol=load_topol,include_wm=include_wm)
-    t2 = time.time()
-    print('timing =',(t2-t1))
+    print('%d statefiles found'%len(statefns))
+    for statefn in statefns:
+        print('evaluating "%s"'%statefn)
+        t1 = time.time()
+        state2plecs(statefn, min_wd, min_writhe = min_writhe,connect_dist=connect_dist,om0=om0,plot_every=plot_every,save_topol=save_topol,load_topol=load_topol,include_wm=include_wm)
+        t2 = time.time()
+        print('timing =',(t2-t1))
