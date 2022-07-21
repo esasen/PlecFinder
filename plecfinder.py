@@ -37,32 +37,72 @@ def find_plectonemes(config: np.ndarray,min_writhe_density: float,plec_min_writh
     
     """ Calculates the topology of a given configuration.
 
-        Arguments
+        Arguments:
         ----------
-        config : np.ndarray
-            3D configruation, should be Nx3 numpy array containing the position vectors
-        
-        min_writhe_dens : float   
-            minimum writhe density for a region to be detected as as plectonemic coil
-        
-        plec_min_writhe : float
-            minimum writhe for a coil to be identified as a plectoneme
-        
-        disc_len :  float, optional       
-            discretization length, if None discretization length will be calculated based on 
-            provided configuration (default: None)
+            config : np.ndarray
+                3D configruation, should be Nx3 numpy array containing the position vectors
             
-        no_branch_overlap: bool, optional
-            remove overlap of neighboring branches (default: True)
+            min_writhe_dens : float   
+                minimum writhe density for a region to be detected as as plectonemic coil
+            
+            plec_min_writhe : float
+                minimum writhe for a coil to be identified as a plectoneme
+            
+            disc_len :  float, optional       
+                discretization length, if None discretization length will be calculated based on 
+                provided configuration (default: None)
+                
+            no_branch_overlap: bool, optional
+                remove overlap of neighboring branches (default: True)
 
-        connect_dist: float, optional
-            distance in nm for which neighboring points of sufficient writhedensity points are connected to form a branch (default: 10nm)
-        
-        om0: float, optional
-            intrinsic twist (default: 1.76 rad/nm)
+            connect_dist: float, optional
+                distance in nm for which neighboring points of sufficient writhedensity points are connected to form a branch (default: 10nm)
             
-        include_wm: bool, optional
-            include writhemap in return dictionary. This may lead to large memory consumption. (default: False)
+            om0: float, optional
+                intrinsic twist (default: 1.76 rad/nm)
+                
+            include_wm: bool, optional
+                include writhemap in return dictionary. This may lead to large memory consumption. (default: False)
+            
+        Returns:
+        ----------
+            topology dictionary:
+            
+                ### Keys:
+                - N :         number of chain segments
+                - L : Length of chain
+                - disc_len : discretization length (segment size)
+                - plecs :     list of plectonemes
+                - wr :  total writhe in configuration
+                - num_plecs :  number of plectonemes
+                - num_branches :  list of branches
+                - num_tracers :  list of tracers
+                - branches :  list of branches
+                - tracers :  list of tracers
+                - wm : writhe map (this key is optional)
+
+                Elements of the plectoneme list are dictionaries themselves. 
+                ### Plectoneme Keys:
+                - id1 : entrance index
+                - id2 : exit index
+                - wrdens : writhe density within plectoneme
+                - wr : total writhe in plectoneme
+                - num_segs : number of contained segments
+                - L : length of plectoneme
+                - branch_ids : indices of branches and tracers contained in plectoneme
+
+                Banches and Tracers are likewise dictionaries. 
+                ### Branch keys:
+                - id : index in branches list
+                - x1 : entrance x id
+                - x2 : exit x id
+                - y1 : entrance y id
+                - y2 : exit y id
+
+                ### Tracer keys:
+                - id : index in tracers list
+                - points : list of points tracing the branch, each of which contains an x index and y index for the two pairs consituting the two segments on opposing strands of the superhelix 
+            
     """
     
     ####################################################################
@@ -79,21 +119,28 @@ def find_plectonemes(config: np.ndarray,min_writhe_density: float,plec_min_writh
     ####################################################################
     # Trace Plectonemes
     
-    # detect branches
+    # detect traces and assign them to branches 
     branches,tracers = _find_branches(pWM,min_writhe_density, disc_len, connect_dist=connect_dist, om0=om0)
-    if no_branch_overlap:
-        branches         = _remove_branch_overlap(pWM,branches)
-        branches,tracers = _remove_flagged_branches(branches,tracers)
-    combbranches,contained_branch_ids = combine_branches(pWM,branches,min_writhe_density,disc_len,om0)
     
-    plecs = _define_plecs(pWM,combbranches,min_writhe_density,plec_min_writhe,disc_len,om0)
-    plec_branch_ids = [contained_branch_ids[int(plec[6])] for plec in plecs]
+    if len(branches) > 0:
+        if no_branch_overlap:
+            branches         = _remove_branch_overlap(pWM,branches)
+            branches,tracers = _remove_flagged_branches(branches,tracers)
+        
+        # collect branches into plectonemes
+        combbranches,contained_branch_ids = combine_branches(pWM,branches,min_writhe_density,disc_len,om0)
+        plecs                             = _define_plecs(pWM,combbranches,min_writhe_density,plec_min_writhe,disc_len,om0)
+        plec_branch_ids                   = [contained_branch_ids[int(plec[6])] for plec in plecs]
+    else:
+        # if there are no branches found empty lists are initialized
+        plecs           = list()
+        plec_branch_ids = list()
     
     ####################################################################
     # assign topology dictionary
     
     plecdicts = list()
-    for plec in plecs:
+    for i,plec in enumerate(plecs):
         plecdict = dict()
         plecdict['id1']         = int(plec[0])
         plecdict['id2']         = int(plec[1])
@@ -101,7 +148,7 @@ def find_plectonemes(config: np.ndarray,min_writhe_density: float,plec_min_writh
         plecdict['wr']          = plec[3]
         plecdict['num_segs']    = int(plec[4])
         plecdict['L']           = int(plec[4])*disc_len
-        plecdict['branch_ids']  = [int(bid) for bid in contained_branch_ids[int(plec[6])]]
+        plecdict['branch_ids']  = plec_branch_ids[i]
         plecdicts.append(plecdict)
     
     branchdicts = list()
@@ -627,6 +674,8 @@ def _define_plecs(WM,combbranches,min_writhe_density,min_writhe,disc_len,om0):
         wr          = cal_branch_writhe(WM,candidate_plec)
         num_segs    = (candidate_plec[1]-candidate_plec[0]+1)
         l_plec      = num_segs*disc_len
+        if l_plec <= 0:
+            continue
         wrdens      = wr2dens_conv_fac*wr/l_plec
         
         if wrdens >= min_writhe_density and wr >= min_writhe:

@@ -76,7 +76,7 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
 if __name__ == "__main__":
 
     if len(sys.argv) < 5:
-        print("usage: python %s statefn min_wd min_writhe connect_dist plot_every (default 0)" %sys.argv[0])
+        print("usage: python %s min_wd min_writhe connect_dist plot_every statefns" %sys.argv[0])
         sys.exit(0)
     
     min_writhe      = 0.25
