@@ -100,6 +100,7 @@ def find_plectonemes(config: np.ndarray,min_writhe_density: float,plec_min_writh
         plecdict['wrdens']      = plec[2]
         plecdict['wr']          = plec[3]
         plecdict['num_segs']    = int(plec[4])
+        plecdict['L']           = int(plec[4])*disc_len
         plecdict['branch_ids']  = [int(bid) for bid in contained_branch_ids[int(plec[6])]]
         plecdicts.append(plecdict)
     
@@ -123,6 +124,8 @@ def find_plectonemes(config: np.ndarray,min_writhe_density: float,plec_min_writh
     
     topol = dict()
     topol['N']              = len(WM)
+    topol['L']              = len(WM)*disc_len
+    topol['disc_len']       = disc_len
     topol['plecs']          = plecdicts
     topol['branches']       = branchdicts
     topol['tracers']        = tracerdicts
