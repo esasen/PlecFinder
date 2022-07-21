@@ -3,9 +3,10 @@ Analyzes the topology of polymer configurations
 
 
 
-Topology Dictionary Keys:
+### Topology Dictionary Keys:
 - N :         number of chain segments
 - L : Length of chain
+- disc_len : discretization length (segment size)
 - plecs :     list of plectonemes
 - wr :  total writhe in configuration
 - num_plecs :  number of plectonemes
@@ -15,32 +16,29 @@ Topology Dictionary Keys:
 - tracers :  list of tracers
 - wm : writhe map (this key is optional)
 
-    topol['L']              = len(WM)*disc_len
-    topol['disc_len']       = disc_len
-
-Elements of the plectoneme list are dictionaries themselves. The keys are
+Elements of the plectoneme list are dictionaries themselves. 
+### Plectoneme Keys:
 - id1 : entrance index
 - id2 : exit index
 - wrdens : writhe density within plectoneme
 - wr : total writhe in plectoneme
 - num_segs : number of contained segments
-- 
+- L : length of plectoneme
+- branch_ids : indices of branches and tracers contained in plectoneme
 
+Banches and Tracers are likewise dictionaries. 
+### Branch keys:
+- id : index in branches list
+- x1 : entrance x id
+- x2 : exit x id
+- y1 : entrance y id
+- y2 : exit y id
 
-        plecdict['id1']         = int(plec[0])
-        plecdict['id2']         = int(plec[1])
-        plecdict['wrdens']      = plec[2]
-        plecdict['wr']          = plec[3]
-        plecdict['num_segs']    = int(plec[4])
-        plecdict['branch_ids']  = [int(bid) for bid in contained_branch_ids[int(plec[6])]]
-
-
-
-
-
-
-
-
+### Tracer keys:
+- id : index in tracers list
+- points : list of points tracing the branch, each of which contains an x index and y index for the two pairs consituting the two segments on opposing strands of the superhelix 
+        
+        
 ## Writhe Map
 Methods to calculate the writhe map are contained in the directory CalWM/. The is a cython, a numba and a bare python implementation of method 1 from Klenin et al (Ref. [1]). Cython is recommended as it is several times faster than the numba implementation but it requires compilation. To compile execute the bash script: ./compile.sh
 
