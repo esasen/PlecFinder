@@ -1,44 +1,7 @@
-import os,sys,glob
-import json
-import time
-
+import os,sys
 import numpy as np
-from numba import jit
-
+from   numba import jit
 import plecfinder.pylk as pylk
-
-
-
-########################################################################
-########################################################################
-########################################################################
-
-
-
-
-# ~ relpath = os.path.relpath(os.path.dirname(__file__),os.getcwd()) 
-# ~ cwmpath = os.path.join(relpath,'CalWM')
-# ~ sys.path.append(cwmpath)
-
-
-# ~ WM_METHOD = 'python'
-# ~ try:
-    # ~ import cythonWM as cwm 
-    # ~ WM_METHOD = 'cython'
-# ~ except ModuleNotFoundError:
-    # ~ try:
-        # ~ import numbaWM as nwm
-        # ~ WM_METHOD = 'numba'
-        # ~ print('Warning: Writhe map is calculated with numba implementation. The cython implementation is significantly faster. To compile the cython run the script "CalWM/compile.sh"')
-    # ~ except ModuleNotFoundError:
-        # ~ import pythonWM as pwm
-        # ~ print('Warning: Neither cython nore numba implementation for writhe map found. The calculation will be very slow!')
-
-########################################################################
-########################################################################
-########################################################################
-
-
 
 ########################################################################
 ########################################################################
@@ -116,14 +79,9 @@ def find_plectonemes(conf: np.ndarray,min_writhe_density: float,plec_min_writhe:
             
     """
     
-    # ~ import time 
-    # ~ t1 = time.time()
-    
     # Calculate Writhe Map
     WM = calculate_WM(conf)
-    # ~ t2 = time.time()
-    # ~ print('timing =',(t2-t1))
-    
+
     # Consider writhe always to be positive 
     pWM = np.sign(np.mean(WM))*WM
     
@@ -131,7 +89,6 @@ def find_plectonemes(conf: np.ndarray,min_writhe_density: float,plec_min_writhe:
     if disc_len is None:
         disc_len = cal_disc_len(conf)
 
-    # ~ t1 = time.time()
     ###################
     # Trace Plectonemes
     
@@ -154,9 +111,6 @@ def find_plectonemes(conf: np.ndarray,min_writhe_density: float,plec_min_writhe:
     
     ############################
     # assign topology dictionary
-    
-    # ~ t2 = time.time()
-    # ~ print('timing =',(t2-t1))
     
     plecdicts = list()
     for i,plec in enumerate(plecs):

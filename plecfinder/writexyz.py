@@ -1,11 +1,6 @@
 import numpy as np
 import sys,os
 
-sys.path.append('src')
-import ReadState as rs
-import state2topol as s2p
-
-
 def gen_topol_snapshot(fn,config,topol,colorby='plectoneme'):
     """ Generates an xyz file for the configuration highlighting the topology
     
@@ -69,9 +64,7 @@ def addtopology2xyz(xyz,topol,colorby='plectoneme'):
             curr_type_id = (curr_type_id+1)%len(atom_types)
 
             xyz['types'][id1:id2+1] = [at for i in range(id2-id1+1)]
-            
-
-        
+              
     elif colorby.lower() in ['branch','branches']:
         branches = topol['branches']
         
@@ -83,9 +76,6 @@ def addtopology2xyz(xyz,topol,colorby='plectoneme'):
             
             at = atom_types[curr_type_id]
             curr_type_id = (curr_type_id+1)%len(atom_types)
-            # ~ print("#######")
-            # ~ print(at)
-            # ~ print(x1,x2+1)
             xyz['types'][x1:x2+1] = [at for i in range(x2-x1+1)]
             xyz['types'][y1:y2+1] = [at for i in range(y2-y1+1)]
     return xyz
@@ -97,6 +87,11 @@ def addtopology2xyz(xyz,topol,colorby='plectoneme'):
 ########################################################################
 
 if __name__ == "__main__":
+
+    from plecfinder.iopolymc import ReadState
+    from plecfinder import state2plecs
+    
+    import state2topol as s2p
 
     if len(sys.argv) < 5:
         print("usage: python %s min_wd min_writhe connect_dist plot_every statefns" %sys.argv[0])
@@ -117,9 +112,9 @@ if __name__ == "__main__":
     statefn         = sys.argv[5]
     
     print('evaluating "%s"'%statefn)
-    topols = s2p.state2plecs(statefn, min_wd, min_writhe = min_writhe,connect_dist=connect_dist,om0=om0,plot_every=plot_every,save_topol=save_topol,load_topol=load_topol,include_wm=include_wm)
+    topols = state2plecs(statefn, min_wd, min_writhe = min_writhe,connect_dist=connect_dist,om0=om0,plot_every=plot_every,save_topol=save_topol,load_topol=load_topol,include_wm=include_wm)
 
-    state = rs.ReadState(statefn)
+    state = ReadState(statefn)
     
     snap    = 35
     colorby = 'branch'

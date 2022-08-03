@@ -9,17 +9,6 @@ from plottopol  import plot_topol
 from plecfinder import find_plectonemes,save_topols
 from iopolymc   import state
 
-# ~ import plottopol as ptop
-# ~ import plecfinder as pf
-
-# ~ print(os.path.relpath(os.path.dirname(__file__),os.getcwd()))
-
-# ~ relpath = os.path.relpath(os.path.dirname(__file__),os.getcwd()) 
-# ~ srcpath = os.path.join(relpath,'src')
-# ~ sys.path.append(srcpath)
-# ~ import ReadState as rs
-
-
 
 ########################################################################
 ########################################################################
@@ -83,22 +72,6 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
         save_topols(plec_fn,topols)
     return topols
     
-
-########################################################################
-########################################################################
-########################################################################
-    
-# ~ def topol_consistency(topols):
-    # ~ """
-        # ~ function to induce previous version consistency
-    # ~ """
-    # ~ for topol in topols:
-        # ~ for branch in topol['branches']:
-            # ~ branch['x1'] = int(branch['x1'])
-            # ~ branch['x2'] = int(branch['x2'])
-            # ~ branch['y1'] = int(branch['y1'])
-            # ~ branch['y2'] = int(branch['y2'])
-    # ~ return topols
 
 ########################################################################
 ########################################################################
