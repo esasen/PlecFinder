@@ -5,9 +5,9 @@ import copy
 import numpy as np
 from numba import jit
 
-from plottopol  import plot_topol 
-from plecfinder import find_plectonemes,save_topols
-from iopolymc   import state
+from plecfinder.plottopol  import plot_topol 
+from plecfinder.plecfinder import find_plectonemes,save_topols
+from plecfinder.iopolymc   import state
 
 
 ########################################################################

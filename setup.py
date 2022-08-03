@@ -28,6 +28,8 @@ setup(  name='PlecFinder',
                             'plecfinder.pylk':      'plecfinder/pylk'
                         },
         packages=['plecfinder','plecfinder.pylk','plecfinder.iopolymc'],
+        include_package_data=True,
+        package_data={'': ['examples/*.state']},
         install_requires=[
             'numpy<=1.22',
             'numba',
