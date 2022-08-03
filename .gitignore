@@ -1,0 +1,18 @@
+# ignore bin directory
+**test/
+
+# ignore build directories
+**build/
+**.egg-info/
+
+# ignore pycache
+**__pycache__
+
+# ignore all .so files
+**.so
+
+# ignore all .c files
+**.c
+
+
+
