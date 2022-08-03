@@ -63,27 +63,27 @@ Returns:
     topology dictionary:
 
         ### Keys:
-        - N :         number of chain segments
-        - L : Length of chain
-        - disc_len : discretization length (segment size)
-        - wr :  total writhe in configuration
-        - num_plecs :  number of plectonemes
-        - num_branches :  list of branches
-        - num_tracers :  list of tracers
-        - plecs :     list of plectonemes
-        - branches :  list of branches
-        - tracers :  list of tracers
-        - wm : writhe map (this key is optional)
+        - N :               number of chain segments
+        - L :               Length of chain
+        - disc_len :        discretization length (segment size)
+        - wr :              total writhe in configuration
+        - num_plecs :       number of plectonemes
+        - num_branches :    list of branches
+        - num_tracers :     list of tracers
+        - plecs :           list of plectonemes
+        - branches :        list of branches
+        - tracers :         list of tracers
+        - wm :              writhe map (this key is optional)
 
         Elements of the plectoneme list are dictionaries themselves. 
         ### Plectoneme Keys:
-        - id1 : entrance index
-        - id2 : exit index
-        - wrdens : writhe density within plectoneme
-        - wr : total writhe in plectoneme
-        - num_segs : number of contained segments
-        - L : length of plectoneme
-        - branch_ids : indices of branches and tracers contained in plectoneme
+        - id1 :         entrance index
+        - id2 :         exit index
+        - wrdens :      writhe density within plectoneme
+        - wr :          total writhe in plectoneme
+        - num_segs :    number of contained segments
+        - L :           length of plectoneme
+        - branch_ids :  indices of branches and tracers contained in plectoneme
 
         Banches and Tracers are likewise dictionaries. 
         ### Branch keys:
@@ -94,8 +94,8 @@ Returns:
         - y2 : exit y id
 
         ### Tracer keys:
-        - id : index in tracers list
-        - points : list of points tracing the branch, each of which contains an x index and y index for the two pairs consituting the two segments on opposing strands of the superhelix 
+        - id :      index in tracers list
+        - points :  list of points tracing the branch, each of which contains an x index and y index for the two pairs consituting the two segments on opposing strands of the superhelix 
 
 
         
