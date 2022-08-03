@@ -1,5 +1,6 @@
 # ignore bin directory
 **test/
+**plotplec/
 
 # ignore build directories
 **build/
