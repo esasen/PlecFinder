@@ -1,10 +1,19 @@
 # PlecFinder
-Analyzes the topology of polymer configurations
+Python package for analyzing the topology of polymer configurations
 
 ## Install
+
+required packages: 
+- numpy
+- scipy
+- numba
+- cython
+- matplolib
+
 ```
 git clone https://github.com/eskoruppa/PlecFinder.git
 ```
+
 
 
 
