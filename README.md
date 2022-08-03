@@ -1,6 +1,18 @@
 # PlecFinder
 Analyzes the topology of polymer configurations
 
+## Install
+```
+git clone https://github.com/eskoruppa/PlecFinder.git
+```
+
+
+
+### Required packages:
+
+
+
+
 
 
 ### Topology Dictionary Keys:
