@@ -3,26 +3,30 @@ Python package for analyzing the topology of polymer configurations
 
 ## Install
 
-required packages: 
+### Required packages:
 - numpy
 - scipy
 - numba
 - cython
 - matplolib
 
+##### Package installation
 ```
 git clone https://github.com/eskoruppa/PlecFinder.git
+pip install PlecFinder/.
+```
+
+### Example
+```
+python
+import plecfinder as pf
+pf.testrun()
 ```
 
 
 
 
-### Required packages:
-
-
-
-
-
+## Output
 
 ### Topology Dictionary Keys:
 - N :         number of chain segments
