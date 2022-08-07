@@ -6,29 +6,36 @@ import numpy as np
 from numba import jit
 
 from plecfinder.plottopol  import plot_topol 
-from plecfinder.plecfinder import find_plectonemes,save_topols
-from plecfinder.iopolymc   import state
+from plecfinder.plecfinder import find_plectonemes,save_topol,load_topol,cal_disc_len
+from plecfinder.iopolymc   import read_state
+
 
 
 ########################################################################
 ########################################################################
 ########################################################################
 
-def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,connect_dist: float,no_branch_overlap=True,om0=1.76,plot_every=0,save_topol=False,load_topol=False,include_wm=False):
+def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,connect_dist: float,no_branch_overlap=True,om0=1.76,plot_every=0,save=False,load=False,include_wm=False):
     
-    plec_fn = statefn.replace('.state',('_topols_mwd%s_mwr%s_cd%s'%(min_writhe_density,min_writhe,connect_dist)).replace('.','p'))
+    if load or save or plot_every > 0:
+        outpath = statefn.replace('.state','')
+        if not os.path.exists(outpath):
+            os.makedirs(outpath)   
+        
+        settingsname = ('mwd%s_mwr%s_cd%s'%(min_writhe_density,min_writhe,connect_dist)).replace('.','p')
+        plec_fn = outpath + '/topols_' + settingsname
     
     # load from file
-    if load_topol:
+    if load:
         if os.path.isfile(plec_fn):
-            topols = pf.load_topols(plec_fn)
+            print('loading')
+            topols = load_topol(plec_fn)
+            print('done')
             if topols is not None:
-                # ~ topols = topol_consistency(topols)
-                # ~ pf.save_topols(plec_fn,topols)
                 return topols
     
     # load state       
-    state = state.load_state(statefn)
+    state    = read_state(statefn)
     configs  = state['pos']
     disc_len = state['disc_len']
     nbp      = state['Segments']
@@ -36,13 +43,13 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
     
     # make directory for plots
     if plot_every > 0:
-        path = statefn.replace('.state',f'_mwd{min_writhe_density}_plotplec'.replace('.','p'))
-        if not os.path.exists(path):
-            os.makedirs(path)    
+        figpath = outpath+'/figs_'+settingsname
+        if not os.path.exists(figpath):
+            os.makedirs(figpath)    
     
     # calculate discretization length
     if disc_len is None:
-        disc_len = pf.cal_disc_len(configs[0])
+        disc_len = cal_disc_len(configs[0])
     
     # loop over configurations and calculate topology
     topols = list()
@@ -64,12 +71,13 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
         # plot topology
         if plot_every > 0:
             if i%plot_every == 0:
-                figfn = path+'/' + ('mwd_%.4f'%min_writhe_density).replace('.','p') + '_#%d'%i
+                figfn = figpath + '/snapshot_%d'%i
+                print(figfn)
                 plot_topol(topol,savefn=figfn)
     
     # ~ # save topology
-    if save_topol:
-        save_topols(plec_fn,topols)
+    if save:
+        save_topol(plec_fn,topols)
     return topols
     
 
@@ -87,9 +95,9 @@ if __name__ == "__main__":
     connect_dist    = 25.0
     om0             = 1.76
     
-    include_wm = False
-    load_topol = True
-    save_topol = True
+    include_wm  = False
+    load        = True
+    save        = True
     
     min_wd          = float(sys.argv[1])
     min_writhe      = float(sys.argv[2])
@@ -101,6 +109,8 @@ if __name__ == "__main__":
     for statefn in statefns:
         print('evaluating "%s"'%statefn)
         t1 = time.time()
-        state2plecs(statefn, min_wd, min_writhe = min_writhe,connect_dist=connect_dist,om0=om0,plot_every=plot_every,save_topol=save_topol,load_topol=load_topol,include_wm=include_wm)
+        topols = state2plecs(statefn, min_wd, min_writhe = min_writhe,connect_dist=connect_dist,om0=om0,plot_every=plot_every,save=save,load=load,include_wm=include_wm)
         t2 = time.time()
         print('timing =',(t2-t1))
+    
+        

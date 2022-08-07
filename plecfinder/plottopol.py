@@ -36,6 +36,8 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
     ax1.set_ylim([0,N])
 
     for i,tracer in enumerate(topol['tracers']):
+        if len(tracer['points']) == 0:
+            continue
         tpts = np.array(tracer['points'])
         ax1.scatter(tpts[:,0],tpts[:,1],s=8,color=colors[i])
         ax1.scatter(tpts[:,1],tpts[:,0],s=8,color=colors[i])

@@ -164,7 +164,15 @@ def find_plectonemes(conf: np.ndarray,min_writhe_density: float,plec_min_writhe:
 ########################################################################
 ########################################################################
 
-def load_topols(fn):
+# ~ def remove_overlap(branchdicts):
+    # ~ pass
+
+
+########################################################################
+########################################################################
+########################################################################
+
+def load_topol(fn):
     """
         Load topology form file
     """
@@ -176,7 +184,7 @@ def load_topols(fn):
         return topols
     return None
         
-def save_topols(fn,topols):
+def save_topol(fn,topols):
     """
         Save topology to file
     """
