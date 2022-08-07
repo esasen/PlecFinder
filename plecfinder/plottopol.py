@@ -18,7 +18,10 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
     tick_labelsize = 7
     ###############################################
     
-    colors = color=plt.get_cmap('tab20c').colors
+    colors = list()
+    for i in range(100):
+        colors += plt.get_cmap('tab20c').colors
+
     N      = topol['N']
     
     fig = plt.figure(figsize=(2*8.7/2.54,2*8.7/2.54), dpi=100, facecolor='w',edgecolor='k')
@@ -36,15 +39,12 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
     ax1.set_ylim([0,N])
 
     for i,tracer in enumerate(topol['tracers']):
-        if len(tracer['points']) == 0:
-            continue
         tpts = np.array(tracer['points'])
         ax1.scatter(tpts[:,0],tpts[:,1],s=8,color=colors[i])
         ax1.scatter(tpts[:,1],tpts[:,0],s=8,color=colors[i])
         ax1.plot(tpts[:,0],tpts[:,1],color='black',lw=0.5)
         ax1.plot(tpts[:,1],tpts[:,0],color='black',lw=0.5)
-    
- 
+
     for i,branch in enumerate(topol['branches']):
         color = colors[i]
         ax1.add_patch(Rectangle((branch['x1'],branch['y1']), (branch['x2']-branch['x1']), (branch['y2']-branch['y1']),
