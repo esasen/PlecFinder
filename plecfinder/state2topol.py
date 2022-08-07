@@ -6,7 +6,7 @@ import numpy as np
 from numba import jit
 
 from plecfinder.plottopol  import plot_topol 
-from plecfinder.plecfinder import find_plectonemes,save_topol,load_topol,cal_disc_len
+from plecfinder.plecfinder import find_plecs,save_topol,load_topol,cal_disc_len
 from plecfinder.iopolymc   import read_state
 
 
@@ -15,7 +15,7 @@ from plecfinder.iopolymc   import read_state
 ########################################################################
 ########################################################################
 
-def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,connect_dist: float,no_branch_overlap=True,om0=1.76,plot_every=0,save=False,load=False,include_wm=False):
+def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,connect_dist: float,no_overlap=True,om0=1.76,plot_every=0,save=False,load=False,include_wm=False):
     
     if load or save or plot_every > 0:
         outpath = statefn.replace('.state','')
@@ -58,10 +58,10 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
             print(i)
             
         # plot topology
-        topol = find_plectonemes(config, min_writhe_density  = min_writhe_density,
+        topol = find_plecs(config, min_writhe_density  = min_writhe_density,
                                             plec_min_writhe     = min_writhe,
                                             disc_len            = disc_len,
-                                            no_branch_overlap   = no_branch_overlap,
+                                            no_overlap          = no_overlap,
                                             connect_dist        = connect_dist,
                                             om0                 = om0,
                                             include_wm          = include_wm)

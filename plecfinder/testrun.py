@@ -41,7 +41,7 @@ def testrun():
         topol = pf.find_plectonemes(config, min_writhe_density = min_wd,
                                             plec_min_writhe    = min_writhe,
                                             disc_len           = None,
-                                            no_branch_overlap  = True,
+                                            no_overlap         = True,
                                             connect_dist       = connect_dist,
                                             om0                = om0,
                                             include_wm         = False)

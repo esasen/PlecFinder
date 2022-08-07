@@ -7,7 +7,7 @@ import plecfinder.pylk as pylk
 ########################################################################
 ########################################################################
 
-def find_plectonemes(conf: np.ndarray,min_writhe_density: float,plec_min_writhe: float ,disc_len=None, no_branch_overlap=True ,connect_dist=10.0, om0=1.76,include_wm=False):
+def find_plecs(conf: np.ndarray,min_writhe_density: float,plec_min_writhe: float ,disc_len=None, no_overlap=True ,connect_dist=10.0, om0=1.76,include_wm=False):
     
     """ Calculates the topology of a given configuration.
 
@@ -26,7 +26,7 @@ def find_plectonemes(conf: np.ndarray,min_writhe_density: float,plec_min_writhe:
                 discretization length, if None discretization length will be calculated based on 
                 provided configuration (default: None)
                 
-            no_branch_overlap: bool, optional
+            no_overlap: bool, optional
                 remove overlap of neighboring branches (default: True)
 
             connect_dist: float, optional
@@ -96,7 +96,7 @@ def find_plectonemes(conf: np.ndarray,min_writhe_density: float,plec_min_writhe:
     branches,tracers = _find_branches(pWM,min_writhe_density, disc_len, connect_dist=connect_dist, om0=om0)
     
     if len(branches) > 0:
-        if no_branch_overlap:
+        if no_overlap:
             branches         = _remove_branch_overlap(pWM,branches)
             branches,tracers = _remove_flagged_branches(branches,tracers)
         
@@ -153,7 +153,8 @@ def find_plectonemes(conf: np.ndarray,min_writhe_density: float,plec_min_writhe:
     topol['num_plecs']      = len(plecdicts)
     topol['num_branches']   = len(branchdicts)
     topol['num_tracers']    = len(tracerdicts)
-    
+    topol['no_overlap']     = no_overlap
+
     if include_wm:
         topol['wm']  = WM
         # ~ topol['pwm'] = pWM
