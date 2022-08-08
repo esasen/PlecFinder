@@ -46,8 +46,9 @@ Arguments:
         discretization length, if None discretization length will be calculated based on 
         provided configuration (default: None)
     
-    no_branch_overlap: bool, optional
+    no_overlap: bool, optional
         remove overlap of neighboring branches (default: True)
+        Note that no_overlap=True is required for building plectoneme structure
     
     connect_dist: float, optional
         distance in nm for which neighboring points of sufficient writhedensity points are connected to form a branch (default: 10nm)

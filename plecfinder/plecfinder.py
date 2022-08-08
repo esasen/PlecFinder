@@ -28,6 +28,7 @@ def find_plecs(conf: np.ndarray,min_writhe_density: float,plec_min_writhe: float
                 
             no_overlap: bool, optional
                 remove overlap of neighboring branches (default: True)
+                Note that no_overlap=True is required for building plectoneme structure
 
             connect_dist: float, optional
                 distance in nm for which neighboring points of sufficient writhedensity points are connected to form a branch (default: 10nm)
@@ -43,17 +44,18 @@ def find_plecs(conf: np.ndarray,min_writhe_density: float,plec_min_writhe: float
             topology dictionary:
             
                 ### Keys:
-                - N :         number of chain segments
-                - L : Length of chain
-                - disc_len : discretization length (segment size)
-                - wr :  total writhe in configuration
-                - num_plecs :  number of plectonemes
-                - num_branches :  list of branches
-                - num_tracers :  list of tracers
-                - plecs :     list of plectonemes
-                - branches :  list of branches
-                - tracers :  list of tracers
-                - wm : writhe map (this key is optional)
+                - N :               int - number of chain segments
+                - L :               float - Length of chain
+                - disc_len :        float - discretization length (segment size)
+                - wr :              float - total writhe in configuration
+                - num_plecs :       int - number of plectonemes
+                - num_branches :    list of branches
+                - num_tracers :     list of tracers
+                - plecs :           list of plectonemes
+                - branches :        list of branches
+                - tracers :         list of tracers
+                - wm :              NxN ndarray - writhe map (this key is optional)
+                - no_overlap :      bool - branch overlap removed
 
                 Elements of the plectoneme list are dictionaries themselves. 
                 ### Plectoneme Keys:
@@ -104,6 +106,9 @@ def find_plecs(conf: np.ndarray,min_writhe_density: float,plec_min_writhe: float
         combbranches,contained_branch_ids = _combine_branches(pWM,branches,min_writhe_density,disc_len,om0)
         plecs                             = _define_plecs(pWM,combbranches,min_writhe_density,plec_min_writhe,disc_len,om0)
         plec_branch_ids                   = [contained_branch_ids[int(plec[6])] for plec in plecs]
+
+        branches = [branches[item] for sublist in plec_branch_ids for item in sublist]
+        tracers  = [tracers[item] for sublist in plec_branch_ids for item in sublist]
     else:
         # if there are no branches found empty lists are initialized
         plecs           = list()
@@ -449,8 +454,9 @@ def _remove_branch_overlap(WM: np.ndarray,branches):
             branches[j][0:2] = xlim2
             branches[j][2:4] = ylim2
     
-    for i,branch in enumerate(branches[:-1]): 
-        if branch[Y1] > branch[Y2]:
+    # for i,branch in enumerate(branches[:-1]):
+    for i,branch in enumerate(branches):
+        if branch[Y1] > branch[Y2] or branch[X1] > branch[X2]:
             branches[i][0] = -1
     # ~ branches = [branch for branch in branches if branch[Y1] <= branch[Y2]]
     return branches

@@ -11,7 +11,7 @@ from cycler import cycler
 ########################################################################
 # plot plectonemes
 
-def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
+def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True,branches=None):
     ###############################################
     # defines
     label_fontsize = 8
@@ -28,7 +28,8 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
     ax1 = plt.subplot2grid((1,1), (0, 0),colspan=1,rowspan=1)
 
     ax1.plot([0,N],[0,N],lw=2,alpha=0.5,color='black')
-    if 'wm' in topol.keys(): 
+    if 'wm' in topol.keys():
+        print('has wm')
         wm = np.array(topol['wm'])
         if flip_positive:
             wm = np.sign(np.mean(wm))*wm
@@ -54,7 +55,6 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
              lw=1,
              alpha=0.5))
         ax1.fill_between([branch['x1'],branch['x2']], [branch['y1'],branch['y1']],[branch['y2'],branch['y2']],alpha=0.5,color=colors[i])
-
         ax1.add_patch(Rectangle((branch['y1'],branch['x1']), (branch['y2']-branch['y1']), (branch['x2']-branch['x1']),
              edgecolor = 'black',
              facecolor = 'none',
@@ -62,7 +62,8 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
              lw=1,
              alpha=0.5))   
         ax1.fill_between([branch['y1'],branch['y2']], [branch['x1'],branch['x1']],[branch['x2'],branch['x2']],alpha=0.5,color=colors[i])
-             
+
+    print(f'num plecs: {len(topol["plecs"])}')
     for plec in topol['plecs']:
         ax1.add_patch(Rectangle((plec['id1'],plec['id1']), (plec['id2']-plec['id1']), (plec['id2']-plec['id1']),
              edgecolor = 'black',
@@ -80,7 +81,22 @@ def plot_topol(topol,savefn=None,flip_positive=True,remove_negative_wr=True):
             # ~ verticalalignment='top', horizontalalignment='left',fontsize=tick_labelsize)
         # ~ ax1.text(plec['id2'], plec['id1']-N*0.01, r'$%d$'%plec['id2'], 
             # ~ verticalalignment='top', horizontalalignment='left',fontsize=tick_labelsize)
-    
+
+    if branches is not None:
+        for br in branches:
+            if len(br['branches']) > 0:
+                for cbr in br['branches']:
+                    ax1.plot([br['root']['x2'],cbr['root']['x1']],[br['root']['y1'],cbr['root']['y2']],color='black',lw=1)
+                    ax1.plot([br['root']['y1'], cbr['root']['y2']],[br['root']['x2'], cbr['root']['x1']],
+                             color='black', lw=1)
+            if len(br['branches']) > 1 or len(br['branches']) == 0:
+                ax1.add_patch(Rectangle((br['root']['x1'], br['root']['x1']), (br['root']['y2'] - br['root']['x1']), (br['root']['y2'] - br['root']['x1']),
+                              edgecolor='black',
+                              facecolor='none',
+                              linestyle='--',
+                              fill=False,
+                              lw=1,
+                              alpha=0.7))
     
     ax1.xaxis.tick_bottom()
     ax1.tick_params(labelsize = tick_labelsize,direction="in")
