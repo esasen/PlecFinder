@@ -1,9 +1,5 @@
 import os,sys,glob
-import json
 import time
-import copy
-import numpy as np
-from numba import jit
 
 from plecfinder.plottopol  import plot_topol 
 from plecfinder.plecfinder import find_plecs,save_topol,load_topol,cal_disc_len

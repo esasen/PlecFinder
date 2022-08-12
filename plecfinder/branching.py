@@ -39,26 +39,9 @@ def build_branchtree(topol):
 
     return treeroot,branches
 
-
-
-
-
-
-
 def is_downstream(branch,upbranch):
     if branch['x1'] < upbranch['x1']:
         return False
     if branch['y1'] > upbranch['y1']:
         return False
     return True
-
-
-#
-#     if branch['']
-
-
-
-    
-# ~ @jit(nopython=True,cache=True) 
-# ~ def 
-

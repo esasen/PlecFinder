@@ -1,10 +1,6 @@
 import numpy as np
-import os,sys,glob
-import json
 import matplotlib.pyplot as plt
-import matplotlib
 from matplotlib.patches import Rectangle
-from cycler import cycler
 
 ########################################################################
 ########################################################################

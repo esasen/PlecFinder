@@ -1,17 +1,11 @@
 import plecfinder as pf
-
-import os,sys,glob
-import json
-import time
-import copy
-import numpy as np
-from numba import jit
-
 from plecfinder.iopolymc   import read_state
-from plecfinder.pylk       import writhemap
 from plecfinder            import plot_topol
 
+import time
 import pkg_resources
+
+
 
 def testrun():
     
@@ -25,7 +19,6 @@ def testrun():
     om0             = 1.76
     
     resource_package = __name__
-    
     statefn = pkg_resources.resource_filename(__name__, 'examples/s_0p0400_run1.state')
 
     state = read_state(statefn)
