@@ -31,7 +31,7 @@ def testrun():
         t1 = time.time()
         
         topols = list()    
-        topol = pf.find_plectonemes(config, min_writhe_density = min_wd,
+        topol = pf.find_plecs(config, min_writhe_density = min_wd,
                                             plec_min_writhe    = min_writhe,
                                             disc_len           = None,
                                             no_overlap         = True,
