@@ -28,7 +28,7 @@ pf.testrun()
 The core functionality is contained in the find_plectonemes function:
 
 ```
-topol = pf.find_plectonemes((conf,min_writhe_density,plec_min_writhe ,disc_len=None, no_branch_overlap=True ,connect_dist=10.0, om0=1.76,include_wm=False))
+topol = pf.find_plecs((conf,min_writhe_density,plec_min_writhe ,disc_len=None, no_branch_overlap=True ,connect_dist=10.0, om0=1.76,include_wm=False))
 ```
 
 Arguments:
