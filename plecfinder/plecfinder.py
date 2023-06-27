@@ -208,17 +208,7 @@ def save_topol(fn,topols):
 ########################################################################
 # Calculate the writhe map
 def calculate_WM(conf):
-
-    # ~ if WM_METHOD == 'cython':
-        # ~ WM  = np.array(cwm.CalculateWritheMap_Langowski(config))
-    # ~ elif WM_METHOD == 'numba':
-        # ~ WM  = np.array(nwm.CalculateWritheMap_Langowski(config))
-    # ~ else:
-        # ~ WM  = np.array(pwm.CalculateWritheMap_Langowski(config))
-        
-    # ~ WM = writhemap.writhemap(config)
-    WM = pylk.writhemap(conf)
-        
+    WM = pylk.writhemap(conf)     
     WM[:,0]  = 0
     WM[:,-1] = 0
     WM[0,:]  = 0
