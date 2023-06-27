@@ -4,7 +4,7 @@ from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 import numpy
 
-compile_args = ['-g', '-std=c++17', '-stdlib=libc++']
+compile_args = ['-g', '-std=c++21', '-stdlib=libc++']
 cmdclass = {}
 ext_modules = []
 
@@ -31,7 +31,7 @@ setup(  name='PlecFinder',
         include_package_data=True,
         package_data={'': ['examples/*.state']},
         install_requires=[
-            'numpy<=1.22',
+            'numpy',
             'numba',
             'cython',
             'scipy'
