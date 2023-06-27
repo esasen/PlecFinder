@@ -14,3 +14,5 @@ from .plottopol   import plot_topol
 from .state2topol import state2plecs
 from .branching   import build_branchtree
 from .testrun     import testrun
+from .IOPolyMC    import iopolymc
+from .PyLk        import pylk

@@ -1,6 +1,6 @@
 import plecfinder as pf
-from plecfinder.iopolymc   import read_state
-from plecfinder            import plot_topol
+from .IOPolyMC.iopolymc     import read_state
+from .plottopol             import plot_topol
 
 import time
 import pkg_resources

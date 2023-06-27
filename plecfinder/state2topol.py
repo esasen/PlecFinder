@@ -1,9 +1,9 @@
 import os,sys,glob
 import time
 
-from plecfinder.plottopol  import plot_topol 
-from plecfinder.plecfinder import find_plecs,save_topol,load_topol,cal_disc_len
-from plecfinder.iopolymc   import read_state
+from .plottopol  import plot_topol 
+from .plecfinder import find_plecs,save_topol,load_topol,cal_disc_len
+from .IOPolyMC.iopolymc.state   import read_state
 
 
 
