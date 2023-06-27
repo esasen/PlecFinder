@@ -1,7 +1,7 @@
 import os,sys
 import numpy as np
 from   numba import jit
-import plecfinder.pylk as pylk
+from .PyLk import pylk
 
 ########################################################################
 ########################################################################

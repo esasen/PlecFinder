@@ -9,7 +9,7 @@ cmdclass = {}
 ext_modules = []
 
 cmdclass.update({'build_ext': build_ext})
-ext_modules+=cythonize([Extension("plecfinder.pylk._writhemap_cython", ["plecfinder/pylk/_writhemap_cython.pyx"], include_dirs=[numpy.get_include()])])
+ext_modules+=cythonize([Extension("plecfinder.PyLk.pylk._writhemap_cython", ["plecfinder/PyLk/pylk/_writhemap_cython.pyx"], include_dirs=[numpy.get_include()])])
 
 
 # ~ ext_modules+=cythonize("pylk/cythonWM.pyx"),include_dirs=[numpy.get_include()]
@@ -25,7 +25,7 @@ setup(  name='PlecFinder',
         package_dir =   {
                             'plecfinder':           'plecfinder',
                             'plecfinder.iopolymc':  'plecfinder/iopolymc',
-                            'plecfinder.pylk':      'plecfinder/pylk'
+                            'plecfinder.pylk':      'plecfinder/PyLk/pylk'
                         },
         packages=['plecfinder','plecfinder.pylk','plecfinder.iopolymc'],
         include_package_data=True,
