@@ -1,20 +1,20 @@
-import os,sys,glob
+import os,sys
 import time
+
+import numpy as np
 
 from .plottopol  import plot_topol 
 from .plecfinder import find_plecs,save_topol,load_topol,cal_disc_len
-from .IOPolyMC.iopolymc.state import read_state
-
-
+from .IOPolyMC.iopolymc.xyz import load_xyz
 
 ########################################################################
 ########################################################################
 ########################################################################
 
-def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,connect_dist: float,no_overlap=True,om0=1.76,plot_every=0,save=False,load=False,include_wm=False):
+def xyz2plecs(xyzfn: str, min_writhe_density: float, min_writhe: float,connect_dist: float=10,no_overlap=True,om0=1.76,plot_every=0,save=False,load=False,include_wm=False):
     
     if load or save or plot_every > 0:
-        outpath = statefn.replace('.state','')
+        outpath = xyzfn.replace('.xyz','')
         if not os.path.exists(outpath):
             os.makedirs(outpath)   
         
@@ -30,12 +30,10 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
             if topols is not None:
                 return topols
     
-    # load state       
-    state    = read_state(statefn)
-    configs  = state['pos']
-    disc_len = state['disc_len']
-    nbp      = state['Segments']
-    dlk      = state['delta_LK']
+    # load xyz       
+    xyz      = load_xyz(xyzfn)
+    configs  = xyz['pos']
+    disc_len = None
     
     # make directory for plots
     if plot_every > 0:
@@ -54,13 +52,14 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
             print(i)
             
         # plot topology
-        topol = find_plecs(config, min_writhe_density  = min_writhe_density,
-                                            plec_min_writhe     = min_writhe,
-                                            disc_len            = disc_len,
-                                            no_overlap          = no_overlap,
-                                            connect_dist        = connect_dist,
-                                            om0                 = om0,
-                                            include_wm          = include_wm)
+        topol = find_plecs(config, 
+                           min_writhe_density = min_writhe_density, 
+                           plec_min_writhe = min_writhe,
+                           disc_len = disc_len,
+                           no_overlap = no_overlap,
+                           connect_dist = connect_dist,
+                           om0 = om0,
+                           include_wm = include_wm)
                 
         topols.append(topol)
         
@@ -71,11 +70,20 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
                 print(figfn)
                 plot_topol(topol,savefn=figfn)
     
-    # ~ # save topology
+    # save topology
     if save:
         save_topol(plec_fn,topols)
     return topols
-    
+
+# def cal_disc_len(configs: np.ndarray,all_confs=True) -> float:
+#     if len(configs.shape) > 3:
+#         raise ValueError(f'Unexpected structure of configs. Should be two or three dimension, but received shape {configs.shape}.')
+#     if not all_confs and len(configs.shape) == 3:
+#         configs = configs[0]
+#         lens = np.linalg.norm(np.diff(configs,axis=0),axis=1)
+#         return np.mean(lens)
+#     lens = np.linalg.norm(np.diff(configs,axis=1),axis=2)
+#     return np.mean(lens)
 
 ########################################################################
 ########################################################################
@@ -84,7 +92,7 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
 if __name__ == "__main__":
 
     if len(sys.argv) < 5:
-        print("usage: python %s min_wd min_writhe connect_dist plot_every statefns" %sys.argv[0])
+        print("usage: python %s min_wd min_writhe connect_dist plot_every xyzfns" %sys.argv[0])
         sys.exit(0)
     
     min_writhe      = 0.25
@@ -99,14 +107,14 @@ if __name__ == "__main__":
     min_writhe      = float(sys.argv[2])
     connect_dist    = float(sys.argv[3])
     plot_every      = int(sys.argv[4])
-    statefns        = sys.argv[5:]
+    xyzfns        = sys.argv[5:]
     
-    print('%d statefiles found'%len(statefns))
-    for statefn in statefns:
-        print('evaluating "%s"'%statefn)
+    print('%d statefiles found'%len(xyzfns))
+    for xyzfn in xyzfns:
+        print('evaluating "%s"'%xyzfn)
         t1 = time.time()
-        topols = state2plecs(statefn, min_wd, min_writhe = min_writhe,connect_dist=connect_dist,om0=om0,plot_every=plot_every,save=save,load=load,include_wm=include_wm)
+        topols = xyz2plecs(xyzfn, min_wd, min_writhe = min_writhe,connect_dist=connect_dist,om0=om0,plot_every=plot_every,save=save,load=load,include_wm=include_wm)
         t2 = time.time()
-        print('timing =',(t2-t1))
+        print(f'timing = {t2-t1}')
     
         

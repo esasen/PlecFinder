@@ -20,7 +20,7 @@ import plecfinder as pf
 if __name__ == "__main__":
 
     if len(sys.argv) < 5:
-        print("usage: python %s min_wd min_writhe connect_dist plot_every statefns" %sys.argv[0])
+        print("usage: python %s min_wd min_writhe connect_dist plot_every files" %sys.argv[0])
         sys.exit(0)
     
     min_writhe      = 0.25
@@ -35,13 +35,25 @@ if __name__ == "__main__":
     min_writhe      = float(sys.argv[2])
     connect_dist    = float(sys.argv[3])
     plot_every      = int(sys.argv[4])
-    statefns        = sys.argv[5:]
+    fns        = sys.argv[5:]
     
-    print('%d statefiles found'%len(statefns))
-    for statefn in statefns:
-        print('evaluating "%s"'%statefn)
+    print('%d files found'%len(fns))
+    for fn in fns:
+        print('evaluating "%s"'%fn)
         t1 = time.time()
-        topols = pf.state2plecs(    statefn, 
+        
+        if os.path.splitext(fn)[-1].lower() == '.state':
+            topols = pf.state2plecs(fn, 
+                                    min_wd, 
+                                    min_writhe = min_writhe,
+                                    connect_dist=connect_dist,
+                                    om0=om0,
+                                    plot_every=plot_every,
+                                    save=save,
+                                    load=load,
+                                    include_wm=include_wm)
+        if os.path.splitext(fn)[-1].lower() == '.xyz':
+            topols = pf.xyz2plecs(  fn, 
                                     min_wd, 
                                     min_writhe = min_writhe,
                                     connect_dist=connect_dist,
