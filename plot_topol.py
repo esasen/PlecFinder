@@ -27,7 +27,7 @@ if __name__ == "__main__":
     connect_dist    = 25.0
     om0             = 1.76
     
-    include_wm  = True
+    include_wm  = False
     load        = True
     save        = True
     
