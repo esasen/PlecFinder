@@ -23,7 +23,7 @@ def build_branchtree(topol: Dict[str,Any]):
     if not topol['no_overlap']:
         raise ValueError("Requires branchoverlap to be removed! Set no_overlap to True when running find_plecs")
 
-    treeroot = list()
+    treeroots = list()
     branches = [{'root': branch, 'branches': list()} for branch in topol['branches']]
 
     for i,br in enumerate(branches):
@@ -34,11 +34,11 @@ def build_branchtree(topol: Dict[str,Any]):
                 src_branch = cbr
                 break
         if src_branch is None:
-            treeroot.append(br)
+            treeroots.append(br)
         else:
             src_branch['branches'].append(br)
 
-    return treeroot,branches
+    return treeroots,branches
 
 def is_downstream(branch,upbranch):
     if branch['x1'] < upbranch['x1']:
