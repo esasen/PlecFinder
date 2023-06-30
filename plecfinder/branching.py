@@ -1,12 +1,13 @@
 import os,sys
 import numpy as np
-from   numba import jit
+from typing import Dict, Any
+
 
 ########################################################################
 ########################################################################
 ########################################################################
 
-def build_branchtree(topol):
+def build_branchtree(topol: Dict[str,Any]):
     """ build branch tree for chain topology
 
         Arguments:
