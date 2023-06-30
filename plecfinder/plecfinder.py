@@ -796,7 +796,6 @@ if __name__ == "__main__":
     plec_min_writhe = 0.5
 
     for i,config in enumerate(configs):
-        print(i)
         topol = find_plecs(
             config,
             min_writhe_density,
@@ -807,4 +806,4 @@ if __name__ == "__main__":
         )
         # sys.exit()
 
-        # print(topol)
+        print(topol)
