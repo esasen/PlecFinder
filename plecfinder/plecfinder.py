@@ -781,3 +781,30 @@ def __cal_disc_len(conf):
 ########################################################################
 ########################################################################
 ########################################################################
+
+
+if __name__ == "__main__":
+    
+    from .IOPolyMC.iopolymc import read_state
+
+    fn = "plecfinder/examples/tweezer_f0p5_s0p035.state"
+    state = read_state(fn)
+
+    configs = state["pos"]
+
+    min_writhe_density = 0.01
+    plec_min_writhe = 0.5
+
+    for i,config in enumerate(configs):
+        print(i)
+        topol = find_plecs(
+            config,
+            min_writhe_density,
+            plec_min_writhe,
+            disc_len=None,
+            no_overlap=True,
+            connect_dist=10.0,
+        )
+        # sys.exit()
+
+        # print(topol)
