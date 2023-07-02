@@ -52,7 +52,7 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
         if i%print_every==0 and i!=0:
             print(f'Config {i}/{len(configs)}')
             t2 = time.time()
-            print('dt = %.2f s (%.4f s/configuration)'%(t2-t1,(t2-t1)/print_every))
+            print('dt = %.2f s (%.4f s/config)'%(t2-t1,(t2-t1)/print_every))
             t1 = time.time()
             
         # plot topology
