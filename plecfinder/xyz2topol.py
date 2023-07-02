@@ -43,9 +43,15 @@ def xyz2plecs(xyzfn: str, min_writhe_density: float, min_writhe: float,connect_d
     
     # loop over configurations and calculate topology
     topols = list()
+    
+    t1 = time.time()
+    print_every = 200
     for i,config in enumerate(configs):
-        if i%200==0:
+        if i%print_every==0 and i!=0:
             print(i)
+            t2 = time.time()
+            print('dt = %.2f s (%.4f s/snapshot)'%(t2-t1,(t2-t1)/print_every))
+            t1 = time.time()
             
         # plot topology
         topol = find_plecs(config, 
