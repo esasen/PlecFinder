@@ -156,6 +156,7 @@ def find_plecs(
         tracerdict = dict()
         
         if branch[1] > branch[3]:
+            print(branch[1],branch[3])
             raise ValueError(f'branch terminates in lower triangle')
         
         branch_wr     = 2*_cal_branch_writhe(WM,*branch)
@@ -705,6 +706,9 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
                         plec[Y1] = _minint(plec[Y1], branches[i][Y1])
                         plec[WR] = _cal_branch_writhe(WM, *plec)
                     else:
+                        assert _cal_branch_writhe(WM, *branches[i]) == branches[WR], 'branch wr wrong'
+                        assert _cal_branch_writhe(WM, *plec) == plec[WR], 'plec wr wrong'
+                        
                         if branches[WR] > plec[WR]:
                             plec = branches[i]
                 else:
