@@ -219,6 +219,8 @@ def load_topol_npy(fn: str) -> List[Dict[str,Any]] | None:
     """
     Load topology form numpy binary
     """
+    if os.path.splitext(fn) != '.npy':
+        fn = fn + '.npy'
     if not os.path.isfile(fn):
         return None
     return np.load(fn,allow_pickle=True)
