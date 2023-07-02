@@ -25,24 +25,26 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
     
     # load from file
     if load:
-        if os.path.isfile(plec_fn):
+        topols = load_topol(plec_fn)
+        if topols is not None:
+            return topols
+        
+        # if os.path.isfile(plec_fn):
+
+        #     import time
             
-            import time
+        #     t1 = time.time()
+        #     topols = load_topol_npy(plec_fn)
+        #     t2 = time.time()
+        #     print(f'binary: {t2-t1}')
+        #     t1 = time.time()
             
-            t1 = time.time()
-            topols = load_topol_npy(plec_fn)
-            t2 = time.time()
-            print(f'binary: {t2-t1}')
-            t1 = time.time()
-            
-            topols = load_topol(plec_fn)
-            t2 = time.time()
-            print(f'text:   {t2-t1}')
-            
-            
-            
-            if topols is not None:
-                return topols
+        #     topols = load_topol(plec_fn)
+        #     t2 = time.time()
+        #     print(f'text:   {t2-t1}')
+
+            # if topols is not None:
+            #     return topols
     
     # load state       
     state    = read_state(statefn)
@@ -88,7 +90,7 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
     # ~ # save topology
     if save:
         save_topol(plec_fn,topols)
-        save_topol_npy(plec_fn,topols)
+        # save_topol_npy(plec_fn,topols)
     return topols
     
 

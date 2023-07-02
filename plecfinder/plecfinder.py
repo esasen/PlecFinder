@@ -201,7 +201,7 @@ def load_topol(fn: str) -> List[Dict[str,Any]] | None:
         topols = load_topol_text(fn)
         if topols is not None:
             save_topol_npy(npyfn,topols)
-            os.remove(fn)
+            # os.remove(fn)
     return load_topol_npy(fn) 
 
 
