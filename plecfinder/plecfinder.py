@@ -636,14 +636,19 @@ def _is_downstream(a1, a2, b1, b2):
 
 
 # @jit(nopython=True, cache=True)
-def _cal_branch_writhe(WM, branch):
-    X1 = 0
-    X2 = 1
-    Y1 = 2
-    Y2 = 3
+def _cal_branch_writhe(WM,X1,X2,Y1,Y2):
     return np.sum(
-        WM[int(branch[X1]) : int(branch[X2]) + 1, int(branch[Y1]) : int(branch[Y2]) + 1]
+        WM[int(X1) : int(X2) + 1, int(Y1) : int(Y2) + 1]
     )
+    
+# def _cal_branch_writhe(WM, branch):
+#     X1 = 0
+#     X2 = 1
+#     Y1 = 2
+#     Y2 = 3
+#     return np.sum(
+#         WM[int(branch[X1]) : int(branch[X2]) + 1, int(branch[Y1]) : int(branch[Y2]) + 1]
+#     )
 
 
 # @jit(nopython=True, cache=True)
@@ -708,9 +713,7 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
                         plec[X2] = _maxint(plec[X2], branches[i][X2])
                         plec[Y1] = _minint(plec[Y1], branches[i][Y1])
                     else:
-                        if _cal_branch_writhe(WM, branches[i]) > _cal_branch_writhe(
-                            WM, plec
-                        ):
+                        if _cal_branch_writhe(WM, *branches[i]) > _cal_branch_writhe(WM, *plec):
                             plec = branches[i]
                 else:
                     plec[X2] = _maxint(plec[X2], branches[i][X2])
@@ -732,8 +735,8 @@ def _define_plecs(WM, combbranches, min_writhe_density, min_writhe, disc_len, om
     wr_tot = np.sum(WM)
 
     wr2dens_conv_fac = 2 * np.pi / om0
-    minwrdens_convfac = min_writhe_density / wr2dens_conv_fac
-    minwr_per_seg = disc_len * minwrdens_convfac
+    # minwrdens_convfac = min_writhe_density / wr2dens_conv_fac
+    # minwr_per_seg = disc_len * minwrdens_convfac
 
     candidate_plecs = list()
     for combbranch in combbranches:
@@ -746,7 +749,7 @@ def _define_plecs(WM, combbranches, min_writhe_density, min_writhe, disc_len, om
 
     plecs = list()
     for i, candidate_plec in enumerate(candidate_plecs):
-        wr = _cal_branch_writhe(WM, candidate_plec)
+        wr = _cal_branch_writhe(WM, *candidate_plec)
         num_segs = candidate_plec[1] - candidate_plec[0] + 1
         l_plec = num_segs * disc_len
         if l_plec <= 0:
