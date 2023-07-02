@@ -23,12 +23,9 @@ def xyz2plecs(xyzfn: str, min_writhe_density: float, min_writhe: float,connect_d
     
     # load from file
     if load:
-        if os.path.isfile(plec_fn):
-            print('loading')
-            topols = load_topol(plec_fn)
-            print('done')
-            if topols is not None:
-                return topols
+        topols = load_topol(plec_fn)
+        if topols is not None:
+            return topols
     
     # load xyz       
     xyz      = load_xyz(xyzfn)
