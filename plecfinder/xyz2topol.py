@@ -45,7 +45,7 @@ def xyz2plecs(xyzfn: str, min_writhe_density: float, min_writhe: float,connect_d
     topols = list()
     
     t1 = time.time()
-    print_every = 200
+    print_every = 100
     for i,config in enumerate(configs):
         if i%print_every==0 and i!=0:
             print(f'Config {i}/{len(configs)}')
