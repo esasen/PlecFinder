@@ -2,7 +2,9 @@ import os,sys,glob
 import time
 
 from .plottopol  import plot_topol 
-from .plecfinder import find_plecs,save_topol,load_topol,cal_disc_len
+from .plecfinder import find_plecs,cal_disc_len
+from .plecfinder import save_topol,load_topol
+from .plecfinder import save_topol_npy,load_topol_npy
 from .IOPolyMC.iopolymc.state import read_state
 
 
@@ -24,9 +26,21 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
     # load from file
     if load:
         if os.path.isfile(plec_fn):
-            print('loading')
+            
+            import time
+            
+            t1 = time.time()
+            topols = load_topol_npy(plec_fn)
+            t2 = time.time()
+            print(f'binary: {t2-t1}')
+            t1 = time.time()
+            
             topols = load_topol(plec_fn)
-            print('done')
+            t2 = time.time()
+            print(f'text:   {t2-t1}')
+            
+            
+            
             if topols is not None:
                 return topols
     
@@ -74,6 +88,7 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
     # ~ # save topology
     if save:
         save_topol(plec_fn,topols)
+        save_topol_npy(plec_fn,topols)
     return topols
     
 

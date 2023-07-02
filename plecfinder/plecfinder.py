@@ -3,6 +3,8 @@ import numpy as np
 from numba import jit
 from .PyLk import pylk
 
+from typing import List, Dict, Any, Tuple
+
 ########################################################################
 ########################################################################
 ########################################################################
@@ -17,7 +19,7 @@ def find_plecs(
     connect_dist: float = 10.0,
     om0: float = 1.76,
     include_wm: bool = False,
-):
+) -> List[Dict[str,Any]]:
     """Calculates the topology of a given configuration.
 
     Arguments:
@@ -187,20 +189,20 @@ def find_plecs(
 ########################################################################
 
 
-def load_topol(fn):
+def load_topol(fn: str) -> List[Dict[str,Any]] | None:
     """
     Load topology form file
     """
-    if os.path.isfile(fn):
-        with open(fn, "r") as f:
-            topols = f.read()
-            topols = topols.replace("array", "np.array")
-            topols = eval(topols)
-        return topols
-    return None
+    if not os.path.isfile(fn):
+        return None
+    with open(fn, "r") as f:
+        topols = f.read()
+        topols = topols.replace("array", "np.array")
+        topols = eval(topols)
+    return topols
 
 
-def save_topol(fn, topols):
+def save_topol(fn: str, topols: List[Dict[str,Any]]) -> None:
     """
     Save topology to file
     """
@@ -210,6 +212,26 @@ def save_topol(fn, topols):
     with open(fn, "w") as outfile:
         outfile.write(repr(topols))
     np.set_printoptions(threshold=1000)
+    
+    
+    
+def load_topol_npy(fn: str) -> List[Dict[str,Any]] | None:
+    """
+    Load topology form numpy binary
+    """
+    if not os.path.isfile(fn):
+        return None
+    return np.load(fn,allow_pickle=True)
+
+def save_topol_npy(fn: str, topols: List[Dict[str,Any]]) -> None:
+    """
+    Save topology to numpy binary
+    """
+    if os.path.splitext(fn) != '.npy':
+        fn = fn + '.npy'
+    np.save(fn,topols)
+        
+    
 
 
 ########################################################################
