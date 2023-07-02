@@ -13,7 +13,7 @@ from .IOPolyMC.iopolymc.state import read_state
 ########################################################################
 ########################################################################
 
-def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,connect_dist: float=10,no_overlap=True,om0=1.76,plot_every=0,save=False,load=False,include_wm=False):
+def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,connect_dist: float=10,no_overlap=True,om0=1.76,plot_every=0,save=True,load=True,include_wm=False):
     
     if load or save or plot_every > 0:
         outpath = statefn.replace('.state','')

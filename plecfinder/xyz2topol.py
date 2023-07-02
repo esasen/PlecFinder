@@ -5,7 +5,7 @@ import numpy as np
 
 from .plottopol  import plot_topol 
 from .plecfinder import find_plecs,save_topol,load_topol,cal_disc_len
-from .IOPolyMC.iopolymc.xyz import load_xyz
+from .IOPolyMC.iopolymc.xyz import read_xyz
 
 ########################################################################
 ########################################################################
@@ -28,7 +28,7 @@ def xyz2plecs(xyzfn: str, min_writhe_density: float, min_writhe: float,connect_d
             return topols
     
     # load xyz       
-    xyz      = load_xyz(xyzfn)
+    xyz      = read_xyz(xyzfn)
     configs  = xyz['pos']
     disc_len = None
     
