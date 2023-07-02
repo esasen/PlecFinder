@@ -680,8 +680,8 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
     contained_branch_ids = list()
 
     WR = 4
-    for branch in branches:
-        branch.append(_cal_branch_writhe(WM, *branch))
+    for i,branch in enumerate(branches):
+        branches[i] = np.append(branch,_cal_branch_writhe(WM, *branch))
     
     for i in range(len(branches)):
         p1 = branches[i][X1]
