@@ -650,7 +650,8 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
                         plec[X2] = _maxint(plec[X2], branches[i][X2])
                         plec[Y1] = _minint(plec[Y1], branches[i][Y1])
                     else:
-                        if _cal_branch_writhe(WM, *branches[i]) > _cal_branch_writhe(WM, *plec):
+                        # if _cal_branch_writhe(WM, *branches[i]) > _cal_branch_writhe(WM, *plec):
+                        if _cal_branch_writhe(WM, branches[i][0],branches[i][1],branches[i][2],branches[i][3]) > _cal_branch_writhe(WM, plec[0],plec[1],plec[2],plec[3]):
                             plec = branches[i]
                 else:
                     plec[X2] = _maxint(plec[X2], branches[i][X2])
@@ -686,7 +687,8 @@ def _define_plecs(WM, combbranches, min_writhe_density, min_writhe, disc_len, om
 
     plecs = list()
     for i, candidate_plec in enumerate(candidate_plecs):
-        wr = _cal_branch_writhe(WM, *candidate_plec)
+        # wr = _cal_branch_writhe(WM, *candidate_plec)
+        wr = _cal_branch_writhe(WM, candidate_plec[0],candidate_plec[1],candidate_plec[2],candidate_plec[3])
         num_segs = candidate_plec[1] - candidate_plec[0] + 1
         l_plec = num_segs * disc_len
         if l_plec <= 0:
