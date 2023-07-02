@@ -193,6 +193,31 @@ def load_topol(fn: str) -> List[Dict[str,Any]] | None:
     """
     Load topology form file
     """
+    
+    if os.path.splitext(fn)[-1] != '.npy':
+        npyfn = fn + '.npy'
+        if os.path.isfile(npyfn):
+            return load_topol_npy(fn)
+        topols = load_topol_text(fn)
+        if topols is not None:
+            save_topol_npy(npyfn,topols)
+            os.remove(fn)
+    return load_topol_npy(fn) 
+
+
+def save_topol(fn: str, topols: List[Dict[str,Any]], to_binary: bool=True) -> None:
+    """
+    Save topology to file
+    """
+    if to_binary:
+        save_topol_npy(fn,topols)
+    else:
+        save_topol_text(fn,topols) 
+    
+def load_topol_text(fn: str) -> List[Dict[str,Any]] | None:
+    """
+    Load topology form file
+    """
     if not os.path.isfile(fn):
         return None
     with open(fn, "r") as f:
@@ -202,7 +227,7 @@ def load_topol(fn: str) -> List[Dict[str,Any]] | None:
     return topols
 
 
-def save_topol(fn: str, topols: List[Dict[str,Any]]) -> None:
+def save_topol_text(fn: str, topols: List[Dict[str,Any]]) -> None:
     """
     Save topology to file
     """
@@ -213,13 +238,11 @@ def save_topol(fn: str, topols: List[Dict[str,Any]]) -> None:
         outfile.write(repr(topols))
     np.set_printoptions(threshold=1000)
     
-    
-    
 def load_topol_npy(fn: str) -> List[Dict[str,Any]] | None:
     """
     Load topology form numpy binary
     """
-    if os.path.splitext(fn) != '.npy':
+    if os.path.splitext(fn)[-1] != '.npy':
         fn = fn + '.npy'
     if not os.path.isfile(fn):
         return None
@@ -229,7 +252,7 @@ def save_topol_npy(fn: str, topols: List[Dict[str,Any]]) -> None:
     """
     Save topology to numpy binary
     """
-    if os.path.splitext(fn) != '.npy':
+    if os.path.splitext(fn)[-1] != '.npy':
         fn = fn + '.npy'
     np.save(fn,topols)
         
