@@ -5,6 +5,9 @@ from .PyLk import pylk
 
 from typing import List, Dict, Any, Tuple
 
+# To Do:
+# branch writhe is not correctly calculated. Should be dubbled and possibly checked for overlap of upper and lower triangular contributions
+
 ########################################################################
 ########################################################################
 ########################################################################
@@ -151,12 +154,20 @@ def find_plecs(
     for i, branch in enumerate(branches):
         branchdict = dict()
         tracerdict = dict()
+        
+        if branch[1] > branch[3]:
+            raise ValueError(f'branch terminates in lower triangle')
+        
+        branch_wr     = 2*_cal_branch_writhe(WM,*branch)
+        downstream_wr = _cal_branch_writhe(WM, branch[0],branch[3],branch[0],branch[3])
 
         branchdict["id"] = i
         branchdict["x1"] = int(branch[0])
         branchdict["x2"] = int(branch[1])
         branchdict["y1"] = int(branch[2])
         branchdict["y2"] = int(branch[3])
+        branchdict["wr"] = branch_wr
+        branchdict["wr_down"] = downstream_wr
 
         tracerdict["id"] = i
         tracerdict["points"] = [[pt[0], pt[1]] for pt in tracers[i]]
@@ -182,81 +193,6 @@ def find_plecs(
         # ~ topol['pwm'] = pWM
 
     return topol
-
-
-########################################################################
-######## SAVE AND LOAD TOPOLS ##########################################
-########################################################################
-
-
-def load_topol(fn: str) -> List[Dict[str,Any]] | None:
-    """
-    Load topology form file
-    """
-    
-    if os.path.splitext(fn)[-1] != '.npy':
-        npyfn = fn + '.npy'
-        if os.path.isfile(npyfn):
-            return load_topol_npy(fn)
-        topols = load_topol_text(fn)
-        if topols is not None:
-            save_topol_npy(npyfn,topols)
-            os.remove(fn)
-    return load_topol_npy(fn) 
-
-
-def save_topol(fn: str, topols: List[Dict[str,Any]], to_binary: bool=True) -> None:
-    """
-    Save topology to file
-    """
-    if to_binary:
-        save_topol_npy(fn,topols)
-    else:
-        save_topol_text(fn,topols) 
-    
-def load_topol_text(fn: str) -> List[Dict[str,Any]] | None:
-    """
-    Load topology form file
-    """
-    if not os.path.isfile(fn):
-        return None
-    with open(fn, "r") as f:
-        topols = f.read()
-        topols = topols.replace("array", "np.array")
-        topols = eval(topols)
-    return topols
-
-
-def save_topol_text(fn: str, topols: List[Dict[str,Any]]) -> None:
-    """
-    Save topology to file
-    """
-    if "wm" in topols[0].keys():
-        largest = np.prod(topols[0]["wm"].shape)
-        np.set_printoptions(threshold=largest)
-    with open(fn, "w") as outfile:
-        outfile.write(repr(topols))
-    np.set_printoptions(threshold=1000)
-    
-def load_topol_npy(fn: str) -> List[Dict[str,Any]] | None:
-    """
-    Load topology form numpy binary
-    """
-    if os.path.splitext(fn)[-1] != '.npy':
-        fn = fn + '.npy'
-    if not os.path.isfile(fn):
-        return None
-    return np.load(fn,allow_pickle=True)
-
-def save_topol_npy(fn: str, topols: List[Dict[str,Any]]) -> None:
-    """
-    Save topology to numpy binary
-    """
-    if os.path.splitext(fn)[-1] != '.npy':
-        fn = fn + '.npy'
-    np.save(fn,topols)
-        
-    
 
 
 ########################################################################
