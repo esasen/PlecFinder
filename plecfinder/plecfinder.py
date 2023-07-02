@@ -168,6 +168,8 @@ def find_plecs(
         branchdict["y2"] = int(branch[3])
         branchdict["wr"] = branch_wr
         branchdict["wr_down"] = downstream_wr
+        
+        print(f'wr = {branchdict["wr"]}')
 
         tracerdict["id"] = i
         tracerdict["points"] = [[pt[0], pt[1]] for pt in tracers[i]]
