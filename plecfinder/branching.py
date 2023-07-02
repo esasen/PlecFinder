@@ -2,13 +2,9 @@ import os,sys
 import numpy as np
 from typing import Dict, Any, List, Tuple
 
-
 ########################################################################
 ########################################################################
 ########################################################################
-
-
-
 
 def build_branchtree(topol: Dict[str,Any]) -> Tuple[List[Dict],List[Dict]]:
     """ build branch tree for chain topology

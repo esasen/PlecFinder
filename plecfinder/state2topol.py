@@ -1,13 +1,10 @@
-import os,sys,glob
+import os,sys
 import time
 
 from .plottopol  import plot_topol 
 from .plecfinder import find_plecs,cal_disc_len
-from .plecfinder import save_topol,load_topol
-from .plecfinder import save_topol_npy,load_topol_npy
+from .tofile     import save_topol,load_topol
 from .IOPolyMC.iopolymc.state import read_state
-
-
 
 ########################################################################
 ########################################################################

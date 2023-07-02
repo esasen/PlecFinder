@@ -1,10 +1,9 @@
 import os,sys
 import time
 
-import numpy as np
-
 from .plottopol  import plot_topol 
-from .plecfinder import find_plecs,save_topol,load_topol,cal_disc_len
+from .plecfinder import find_plecs,cal_disc_len
+from .tofile     import save_topol,load_topol
 from .IOPolyMC.iopolymc.xyz import read_xyz
 
 ########################################################################
@@ -72,15 +71,6 @@ def xyz2plecs(xyzfn: str, min_writhe_density: float, min_writhe: float,connect_d
         save_topol(plec_fn,topols)
     return topols
 
-# def cal_disc_len(configs: np.ndarray,all_confs=True) -> float:
-#     if len(configs.shape) > 3:
-#         raise ValueError(f'Unexpected structure of configs. Should be two or three dimension, but received shape {configs.shape}.')
-#     if not all_confs and len(configs.shape) == 3:
-#         configs = configs[0]
-#         lens = np.linalg.norm(np.diff(configs,axis=0),axis=1)
-#         return np.mean(lens)
-#     lens = np.linalg.norm(np.diff(configs,axis=1),axis=2)
-#     return np.mean(lens)
 
 ########################################################################
 ########################################################################
@@ -104,7 +94,7 @@ if __name__ == "__main__":
     min_writhe      = float(sys.argv[2])
     connect_dist    = float(sys.argv[3])
     plot_every      = int(sys.argv[4])
-    xyzfns        = sys.argv[5:]
+    xyzfns          = sys.argv[5:]
     
     print('%d statefiles found'%len(xyzfns))
     for xyzfn in xyzfns:
