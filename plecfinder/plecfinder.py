@@ -216,7 +216,7 @@ def calculate_WM(conf):
 # remove tracers for removed branches
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _remove_flagged_branches(branches, tracers):
     """
     renmove branches and tracers for which the branch is tagged with x1 = -1
@@ -234,7 +234,7 @@ def _remove_flagged_branches(branches, tracers):
 # find branches
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _find_branches(
     WM: np.ndarray,
     min_writhe_density: float,
@@ -384,7 +384,7 @@ def _find_branches(
     return branches, branchtracers
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _find_pairs(WM: np.ndarray, minwr_per_seg: float):
     """
     find pairs based on minimum writhe density
@@ -425,7 +425,7 @@ def _find_pairs(WM: np.ndarray, minwr_per_seg: float):
 # remove branch overlap
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _remove_branch_overlap(WM: np.ndarray, branches):
     """
     removes only overlap in y direction as
@@ -465,7 +465,7 @@ def _remove_branch_overlap(WM: np.ndarray, branches):
     return branches
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _remove_branchpair_overlap(WM, xlim1, xlim2, ylim1, ylim2):
     lim1 = ylim1
     lim2 = ylim2
@@ -545,7 +545,7 @@ def _remove_branchpair_overlap(WM, xlim1, xlim2, ylim1, ylim2):
 ########################################################################
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _minint(a: int, b: int) -> int:
     """
     return minimum of two args
@@ -555,7 +555,7 @@ def _minint(a: int, b: int) -> int:
     return b
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _maxint(a: int, b: int) -> int:
     """
     return maximum of two args
@@ -565,14 +565,14 @@ def _maxint(a: int, b: int) -> int:
     return b
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _is_downstream(a1, a2, b1, b2):
     if (a1 <= b1 <= a2) and (a1 <= b2 <= a2):
         return True
     return False
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _cal_branch_writhe(WM,X1,X2,Y1,Y2):
     return np.sum(
         WM[int(X1) : int(X2) + 1, int(Y1) : int(Y2) + 1]
@@ -588,7 +588,7 @@ def _cal_branch_writhe(WM,X1,X2,Y1,Y2):
 #     )
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _can_connect_downstream_branches(a1, a2, b1, b2, WM, minwr_per_seg):
     a1 = int(a1)
     a2 = int(a2)
@@ -611,7 +611,7 @@ def _can_connect_downstream_branches(a1, a2, b1, b2, WM, minwr_per_seg):
     return False
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
     """
     combine downstream branches
@@ -650,8 +650,7 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
                         plec[X2] = _maxint(plec[X2], branches[i][X2])
                         plec[Y1] = _minint(plec[Y1], branches[i][Y1])
                     else:
-                        # if _cal_branch_writhe(WM, *branches[i]) > _cal_branch_writhe(WM, *plec):
-                        if _cal_branch_writhe(WM, branches[i][0],branches[i][1],branches[i][2],branches[i][3]) > _cal_branch_writhe(WM, plec[0],plec[1],plec[2],plec[3]):
+                        if _cal_branch_writhe(WM, *branches[i]) > _cal_branch_writhe(WM, *plec):
                             plec = branches[i]
                 else:
                     plec[X2] = _maxint(plec[X2], branches[i][X2])
@@ -668,7 +667,7 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
 ########################################################################
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _define_plecs(WM, combbranches, min_writhe_density, min_writhe, disc_len, om0):
     wr_tot = np.sum(WM)
 
@@ -687,8 +686,7 @@ def _define_plecs(WM, combbranches, min_writhe_density, min_writhe, disc_len, om
 
     plecs = list()
     for i, candidate_plec in enumerate(candidate_plecs):
-        # wr = _cal_branch_writhe(WM, *candidate_plec)
-        wr = _cal_branch_writhe(WM, candidate_plec[0],candidate_plec[1],candidate_plec[2],candidate_plec[3])
+        wr = _cal_branch_writhe(WM, *candidate_plec)
         num_segs = candidate_plec[1] - candidate_plec[0] + 1
         l_plec = num_segs * disc_len
         if l_plec <= 0:
@@ -711,7 +709,7 @@ def _define_plecs(WM, combbranches, min_writhe_density, min_writhe, disc_len, om
 ########################################################################
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _find_overlap(plecs):
     for i in range(1, len(plecs)):
         for j in range(i):
@@ -728,7 +726,7 @@ def _find_overlap(plecs):
 ########################################################################
 
 
-@jit(nopython=True, cache=True,inline='always')
+# @jit(nopython=True, cache=True)
 def _tracer_inside_plec(tracer, plec_entry, plec_last, combine_segdist):
     if (
         tracer[0] < plec_entry[0]
