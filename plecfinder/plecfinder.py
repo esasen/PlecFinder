@@ -156,8 +156,8 @@ def find_plecs(
         tracerdict = dict()
         
         if branch[1] > branch[3]:
-            print(branch[1],branch[3])
-            raise ValueError(f'branch terminates in lower triangle')
+            print(f'Warning: branch terminates in lower triangle: ({branch[1]}, {branch[3]})')
+            # raise ValueError(f'branch terminates in lower triangle')
         
         branch_wr     = 2*_cal_branch_writhe(WM,*branch)
         downstream_wr = _cal_branch_writhe(WM, branch[0],branch[3],branch[0],branch[3])
