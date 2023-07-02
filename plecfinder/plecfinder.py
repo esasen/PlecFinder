@@ -679,9 +679,9 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
     combbranch = list()
     contained_branch_ids = list()
 
-    WR = 4
-    for i,branch in enumerate(branches):
-        branches[i] = np.append(branch,_cal_branch_writhe(WM, *branch))
+    brwrs = list()
+    for i,branch in enumerate(branches): 
+        brwrs.append(_cal_branch_writhe(WM, *branch))
     
     for i in range(len(branches)):
         p1 = branches[i][X1]
@@ -704,17 +704,12 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
                     ):
                         plec[X2] = _maxint(plec[X2], branches[i][X2])
                         plec[Y1] = _minint(plec[Y1], branches[i][Y1])
-                        plec[WR] = _cal_branch_writhe(WM, *plec)
                     else:
-                        assert _cal_branch_writhe(WM, *branches[i]) == branches[WR], 'branch wr wrong'
-                        assert _cal_branch_writhe(WM, *plec) == plec[WR], 'plec wr wrong'
-                        
-                        if branches[WR] > plec[WR]:
+                        if brwrs[i] > _cal_branch_writhe(WM, *plec):
                             plec = branches[i]
                 else:
                     plec[X2] = _maxint(plec[X2], branches[i][X2])
                     plec[Y1] = _minint(plec[Y1], branches[i][Y1])
-                    plec[WR] = _cal_branch_writhe(WM, *plec)
                 break
 
         if new_plec:

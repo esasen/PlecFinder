@@ -45,9 +45,13 @@ def state2plecs(statefn: str, min_writhe_density: float, min_writhe: float,conne
     
     # loop over configurations and calculate topology
     topols = list()
+    t1 = time.time()
     for i,config in enumerate(configs):
         if i%200==0:
             print(i)
+            t2 = time.time()
+            print(f'dt = {t2-t1}')
+            t1 = time.time()
             
         # plot topology
         topol = find_plecs(config, min_writhe_density  = min_writhe_density,
