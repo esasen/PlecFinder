@@ -68,7 +68,10 @@ def load_topol_npy(fn: str) -> List[Dict[str, Any]] | None:
         fn = fn + ".npy"
     if not os.path.isfile(fn):
         return None
-    return np.load(fn, allow_pickle=True)
+    topols = np.load(fn, allow_pickle=True)
+    if isinstance(topols,np.ndarray):
+        topols = list(topols)
+    return topols
 
 
 def save_topol_npy(fn: str, topols: List[Dict[str, Any]]) -> None:
