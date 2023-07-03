@@ -1,6 +1,10 @@
+import os,sys
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+
+from .IOPolyMC.iopolymc import read_state, read_xyz
+from .plecfinder import find_plecs, cal_disc_len
 
 ########################################################################
 ########################################################################
@@ -168,7 +172,64 @@ def plot_topol(
         fig.savefig(savefn + ".png", dpi=300, transparent=False, bbox_inches="tight")
         plt.close()
 
+  
+def plot_single(fn: str, snapshot: int, min_wd: float, min_writhe: float, connect_dist: float=10., om0: float=1.76, no_overlap: float=True):
+    if os.path.splitext(fn.lower())[-1] == '.state':
+        state = read_state(fn)
+        configs = state["pos"]
+    elif os.path.splitext(fn.lower())[-1] == '.xyz':
+        xyz = read_xyz(fn)
+        configs = xyz['pos']
+    else:
+        raise ValueError(f'Unknown filetype of file "{fn}"')
+    
+    if len(configs) < snapshot-1:
+        raise ValueError(f'Attempting to access snapshot {snapshot}, but provided file only contains {len(configs)} snapshots.')
+    
+    config = configs[snapshot]
+    disc_len = cal_disc_len(config)
+    
+    topol = find_plecs(
+        config,
+        min_writhe_density=min_wd,
+        plec_min_writhe=min_writhe,
+        disc_len=disc_len,
+        no_overlap=no_overlap,
+        connect_dist=connect_dist,
+        om0=om0,
+        include_wm=True,
+        )
+    
+    outpath = os.path.splitext(fn)[0]
+    if not os.path.exists(outpath):
+        os.makedirs(outpath)
+        
+    settingsname = (
+        "mwd%s_mwr%s_cd%s" % (min_wd, min_writhe, connect_dist)
+    ).replace(".", "p")
+    figpath = outpath + "/figs_" + settingsname
+    if not os.path.exists(figpath):
+        os.makedirs(figpath)
+    figfn = figpath + "/snapshot_%d" % snapshot
+    plot_topol(topol, savefn=figfn)
+          
+    
+    
+    
+########################################################################
+########################################################################
+########################################################################
 
-########################################################################
-########################################################################
-########################################################################
+
+if __name__ == '__main__':
+    
+    if len(sys.argv) < 3:
+        print("usage: python %s fn snapshot min_wd min_writhe" %sys.argv[0])
+        sys.exit(0)
+    
+    fn = sys.argv[1]
+    snapshot = int(sys.argv[2])
+    min_wd     = float(sys.argv[3])
+    min_writhe = float(sys.argv[4])
+
+    plot_single(fn, snapshot, min_wd, min_writhe, connect_dist=10., om0=1.76, no_overlap=True)
