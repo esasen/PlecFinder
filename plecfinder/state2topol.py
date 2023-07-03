@@ -40,6 +40,7 @@ def state2plecs(
         print(os.path.isfile(plec_fn))
         print(os.path.isfile(plec_fn+'.npy'))
         topols = load_topol(plec_fn)
+        print(len(topols))
         if topols is not None:
             return topols
         print('output was None')
