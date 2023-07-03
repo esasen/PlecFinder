@@ -35,15 +35,9 @@ def state2plecs(
 
     # load from file
     if load:
-        print('attempting to load')
-        print(plec_fn)
-        print(os.path.isfile(plec_fn))
-        print(os.path.isfile(plec_fn+'.npy'))
         topols = load_topol(plec_fn)
-        print(len(topols))
         if topols is not None:
             return topols
-        print('output was None')
 
     # load state
     state = read_state(statefn)
