@@ -37,8 +37,10 @@ if __name__ == "__main__":
     plot_every      = int(sys.argv[4])
     fns        = sys.argv[5:]
     
+    fns = [fn for fn in fns if os.path.isfile(fn)]
     print('%d files found'%len(fns))
     for fn in fns:
+        
         print('evaluating "%s"'%fn)
         t1 = time.time()
         

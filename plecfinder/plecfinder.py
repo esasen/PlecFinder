@@ -22,7 +22,7 @@ def find_plecs(
     connect_dist: float = 10.0,
     om0: float = 1.76,
     include_wm: bool = False,
-) -> List[Dict[str,Any]]:
+) -> List[Dict[str, Any]]:
     """Calculates the topology of a given configuration.
 
     Arguments:
@@ -154,13 +154,17 @@ def find_plecs(
     for i, branch in enumerate(branches):
         branchdict = dict()
         tracerdict = dict()
-        
+
         if branch[1] > branch[3]:
-            print(f'Warning: branch terminates in lower triangle: ({branch[1]}, {branch[3]})')
+            print(
+                f"Warning: branch terminates in lower triangle: ({branch[1]}, {branch[3]})"
+            )
             # raise ValueError(f'branch terminates in lower triangle')
-        
-        branch_wr     = 2*_cal_branch_writhe(WM,*branch)
-        downstream_wr = _cal_branch_writhe(WM, branch[0],branch[3],branch[0],branch[3])
+
+        branch_wr = 2 * _cal_branch_writhe(WM, *branch)
+        downstream_wr = _cal_branch_writhe(
+            WM, branch[0], branch[3], branch[0], branch[3]
+        )
 
         branchdict["id"] = i
         branchdict["x1"] = int(branch[0])
@@ -169,7 +173,7 @@ def find_plecs(
         branchdict["y2"] = int(branch[3])
         branchdict["wr"] = branch_wr
         branchdict["wr_down"] = downstream_wr
-        
+
         tracerdict["id"] = i
         tracerdict["points"] = [[pt[0], pt[1]] for pt in tracers[i]]
 
@@ -573,11 +577,10 @@ def _is_downstream(a1, a2, b1, b2):
 
 
 # @jit(nopython=True, cache=True)
-def _cal_branch_writhe(WM,X1,X2,Y1,Y2):
-    return np.sum(
-        WM[int(X1) : int(X2) + 1, int(Y1) : int(Y2) + 1]
-    )
-    
+def _cal_branch_writhe(WM, X1, X2, Y1, Y2):
+    return np.sum(WM[int(X1) : int(X2) + 1, int(Y1) : int(Y2) + 1])
+
+
 # def _cal_branch_writhe(WM, branch):
 #     X1 = 0
 #     X2 = 1
@@ -627,7 +630,7 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
 
     combbranch = list()
     contained_branch_ids = list()
-    
+
     for i in range(len(branches)):
         p1 = branches[i][X1]
         p2 = branches[i][Y2]
@@ -650,7 +653,9 @@ def _combine_branches(WM, branches, min_writhe_density, disc_len, om0):
                         plec[X2] = _maxint(plec[X2], branches[i][X2])
                         plec[Y1] = _minint(plec[Y1], branches[i][Y1])
                     else:
-                        if _cal_branch_writhe(WM, *branches[i]) > _cal_branch_writhe(WM, *plec):
+                        if _cal_branch_writhe(WM, *branches[i]) > _cal_branch_writhe(
+                            WM, *plec
+                        ):
                             plec = branches[i]
                 else:
                     plec[X2] = _maxint(plec[X2], branches[i][X2])
@@ -771,7 +776,6 @@ def __cal_disc_len(conf):
 
 
 if __name__ == "__main__":
-    
     from .IOPolyMC.iopolymc import read_state
 
     fn = "plecfinder/examples/tweezer_f0p5_s0p035.state"
@@ -782,7 +786,7 @@ if __name__ == "__main__":
     min_writhe_density = 0.01
     plec_min_writhe = 0.5
 
-    for i,config in enumerate(configs):
+    for i, config in enumerate(configs):
         topol = find_plecs(
             config,
             min_writhe_density,
