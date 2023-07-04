@@ -17,7 +17,7 @@ def find_plecs(
     conf: np.ndarray,
     min_writhe_density: float,
     plec_min_writhe: float,
-    disc_len: float | None = None,
+    disc_len: float = None,
     no_overlap: bool = True,
     connect_dist: float = 10.0,
     om0: float = 1.76,
