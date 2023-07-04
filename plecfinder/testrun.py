@@ -28,7 +28,6 @@ def testrun():
     for config in configs:
         t1 = time.time()
 
-        to^ols = list()
         topol = find_plecs(
             config,
             min_writhe_density=min_wd,
