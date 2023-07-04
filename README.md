@@ -94,6 +94,8 @@ Returns:
         - x2 : exit x id
         - y1 : entrance y id
         - y2 : exit y id
+        - wr : writhe within branch
+        - wr_down : total writhe downstream relative to the given branch 
     
         ### Tracer keys:
         - id :      index in tracers list
