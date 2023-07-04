@@ -1,4 +1,4 @@
-import plecfinder as pf
+from .plecfinder import find_plecs
 from .IOPolyMC.iopolymc import read_state
 from .plottopol import plot_topol
 
@@ -28,8 +28,8 @@ def testrun():
     for config in configs:
         t1 = time.time()
 
-        topols = list()
-        topol = pf.find_plecs(
+        to^ols = list()
+        topol = find_plecs(
             config,
             min_writhe_density=min_wd,
             plec_min_writhe=min_writhe,
