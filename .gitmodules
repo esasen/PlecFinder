@@ -1,6 +1,8 @@
 [submodule "plecfinder/PyLk"]
 	path = plecfinder/PyLk
 	url = git@github.com:eskoruppa/PyLk
+	branch = main
 [submodule "plecfinder/IOPolyMC"]
 	path = plecfinder/IOPolyMC
 	url = git@github.com:eskoruppa/IOPolyMC
+	branch = main
