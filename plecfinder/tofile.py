@@ -11,7 +11,7 @@ from typing import List, Dict, Any
 def load_topol_by_specs(path: str, mwd: float, mdr: float, cd: float):
     npys = glob.glob(path+'/*.npy')
     for npy in npys:
-        splits = npy.split('/')[-1].split('.')[0].split('_')[1:]
+        splits = npy.split('/')[-1].split('.')[0].replace('p','.').split('_')[1:]
         if (    float(splits[0].replace('mwd','')) == mwd 
             and float(splits[1].replace('mwd','')) == mdr
             and float(splits[1].replace('mwd','')) == cd
