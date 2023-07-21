@@ -14,7 +14,7 @@ def load_topol_by_specs(path: str, mwd: float, mdr: float, cd: float):
         splits = npy.split('/')[-1].split('.')[0].replace('p','.').split('_')[1:]
         if (    float(splits[0].replace('mwd','')) == mwd 
             and float(splits[1].replace('mwr','')) == mdr
-            and float(splits[1].replace('cd','')) == cd
+            and float(splits[2].replace('cd','')) == cd
         ):
             return load_topol_npy
     return None
