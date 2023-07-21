@@ -29,7 +29,7 @@ def state2plecs(
             os.makedirs(outpath)
 
         settingsname = (
-            "mwd%s_mwr%s_cd%s" % (min_writhe_density, min_writhe, connect_dist)
+            "mwd{min_writhe_density}_mwr{min_writhe}_cd{connect_dist}"
         ).replace(".", "p")
         plec_fn = outpath + "/topols_" + settingsname
 

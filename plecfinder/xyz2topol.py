@@ -3,7 +3,7 @@ import time
 
 from .plottopol import plot_topol
 from .plecfinder import find_plecs, cal_disc_len
-from .tofile import save_topol, load_topol
+from .tofile import save_topol, load_topol, load_topol_by_specs
 from .IOPolyMC.iopolymc.xyz import read_xyz
 
 ########################################################################
@@ -29,13 +29,14 @@ def xyz2plecs(
             os.makedirs(outpath)
 
         settingsname = (
-            "mwd%s_mwr%s_cd%s" % (min_writhe_density, min_writhe, connect_dist)
+            "mwd{min_writhe_density}_mwr{min_writhe}_cd{connect_dist}"
         ).replace(".", "p")
         plec_fn = outpath + "/topols_" + settingsname
 
     # load from file
     if load:
-        topols = load_topol(plec_fn)
+        topols = load_topol_by_specs(outpath, min_writhe_density, min_writhe, connect_dist)
+        # topols = load_topol(plec_fn)
         if topols is not None:
             return topols
 
