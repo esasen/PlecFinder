@@ -16,7 +16,7 @@ def load_topol_by_specs(path: str, mwd: float, mdr: float, cd: float):
             and float(splits[1].replace('mwr','')) == mdr
             and float(splits[2].replace('cd','')) == cd
         ):
-            return load_topol_npy
+            return load_topol_npy(npy)
     return None
             
 
