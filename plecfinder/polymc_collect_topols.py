@@ -1,7 +1,8 @@
 import os, sys, glob
 import numpy as np
 from .IOPolyMC import iopolymc as io
-from .plecfinder import state2plecs, xyz2plecs
+from .xyz2topol import xyz2plecs
+from .state2topol import state2plecs
 
 from typing import List, Dict, Any, Callable, Tuple
 
