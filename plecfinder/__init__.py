@@ -11,9 +11,16 @@ from .plecfinder import cal_disc_len
 from .tofile import save_topol, load_topol
 from .plottopol import plot_topol
 from .plottopol import plot_single
-from .state2topol import state2plecs
-from .xyz2topol import xyz2plecs
 from .branching import build_branchtree
 from .testrun import testrun
-from .IOPolyMC import iopolymc
+
+##################################
+# writhe calculation
 from .PyLk import pylk
+
+##################################
+# polymc state and xyz loads
+from .state2topol import state2plecs
+from .xyz2topol import xyz2plecs
+from .polymc_collect_topols import polymc_collect_topols
+from .IOPolyMC import iopolymc
