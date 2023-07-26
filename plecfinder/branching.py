@@ -43,6 +43,16 @@ def build_branchtree(topol: Dict[str, Any]) -> Tuple[List[Dict], List[Dict]]:
     return treeroots, branches
 
 
+def find_endloops(topol: Dict):
+    endpoints = list()
+    treeroots, branches = build_branchtree(topol)
+    for branch in branches:
+        if len(branch['branches']) == 0:
+            endpoint = 0.5*(branch['root']['x2'] + branch['root']['y1'])
+            endpoints.append(endpoint)
+    return endpoints
+
+
 def is_downstream(branch, upbranch):
     if branch["x1"] < upbranch["x1"]:
         return False

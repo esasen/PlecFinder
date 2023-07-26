@@ -12,6 +12,7 @@ from .tofile import save_topol, load_topol
 from .plottopol import plot_topol
 from .plottopol import plot_single
 from .branching import build_branchtree
+from .branching import find_endloops
 from .testrun import testrun
 
 ##################################
