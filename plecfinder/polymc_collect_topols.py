@@ -1,4 +1,5 @@
 import os, sys, glob
+import gc
 import numpy as np
 from .IOPolyMC import iopolymc as io
 from .xyz2topol import xyz2plecs
@@ -87,6 +88,10 @@ class PolyMCTopols:
         while len(topols) == 0:
             if self.index_sim >= len(self.sims):
                 return False
+            
+            if self.topols is not None:
+                del self.topols
+                gc.collect()
             
             topols = polymc_sim2topols(
                 self.sims[self.index_sim],
