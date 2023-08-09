@@ -6,6 +6,33 @@ from .state2topol import state2plecs
 
 from typing import List, Dict, Any, Callable, Tuple
 
+def read_polymc_topols(
+        path: str,
+        select: Dict[str, Any],
+        min_writhe_density: float,
+        min_writhe: float,
+        connect_dist: float = 10,
+        no_overlap: bool = True,
+        om0: float = 1.76,
+        plot_every: int = 0,
+        save_topols: bool = True,
+        include_wm: bool = False,
+        recursive: bool = False,    
+):
+    return PolyMCTopols(
+        path,
+        select,
+        min_writhe_density,
+        min_writhe,
+        connect_dist = connect_dist,
+        no_overlap = no_overlap,
+        om0 = om0,
+        plot_every = plot_every,
+        save_topols = save_topols,
+        include_wm = include_wm,
+        recursive = recursive,
+    )
+
 
 class PolyMCTopols:
     
