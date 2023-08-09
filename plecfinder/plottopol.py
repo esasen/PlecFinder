@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
+from typing import List, Dict, Any, Tuple
+
 from .IOPolyMC.iopolymc import read_state, read_xyz
 from .plecfinder import find_plecs, cal_disc_len
 
@@ -13,12 +15,18 @@ from .plecfinder import find_plecs, cal_disc_len
 
 
 def plot_topol(
-    topol, savefn=None, flip_positive=True, remove_negative_wr=True, branches=None
+    topol: Dict[str,Any], 
+    savefn: str = None, 
+    flip_positive: bool = True, 
+    remove_negative_wr: bool = True, 
+    branches: List = None,
+    print_branch_writhe: bool = True
 ):
     ###############################################
     # defines
     label_fontsize = 8
     tick_labelsize = 7
+    branch_label_fontsize = 5
     ###############################################
 
     colors = list()
@@ -93,6 +101,19 @@ def plot_topol(
             alpha=0.5,
             color=colors[i],
         )
+        
+        if print_branch_writhe:
+            midpoint = 0.5 * ( branch["x1"] +  branch["x2"] )
+            ax1.text(
+                midpoint,
+                branch["y2"] + N * 0.002,
+                r"$Wr = %.2f$" % branch["wr"],
+                verticalalignment="bottom",
+                horizontalalignment="center",
+                fontsize=branch_label_fontsize,
+            )
+        
+        
 
     print(f'num plecs: {len(topol["plecs"])}')
     for plec in topol["plecs"]:
@@ -109,13 +130,13 @@ def plot_topol(
             )
         )
 
-        midpoint = 0.2 * plec["id1"] + 0.8 * plec["id2"]
+        midpoint = 0.5 * ( plec["id1"] +  plec["id2"] ) 
         ax1.text(
             midpoint,
             plec["id2"] + N * 0.01,
             r"$Wr = %.2f$" % plec["wr"],
             verticalalignment="bottom",
-            horizontalalignment="right",
+            horizontalalignment="center",
             fontsize=label_fontsize,
         )
 

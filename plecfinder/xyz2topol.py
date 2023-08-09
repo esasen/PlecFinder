@@ -51,6 +51,7 @@ def xyz2plecs(
                         continue
                     figfn = figpath + "/snapshot_%d" % i
                     print(figfn)
+                    
                     plot_topol(topol, savefn=figfn)
             
             return topols
