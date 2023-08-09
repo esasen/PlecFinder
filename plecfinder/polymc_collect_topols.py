@@ -32,48 +32,112 @@ def polymc_collect_topols(
         if num_files is not None and num >= num_files:
             break
         
-        statefn = None
-        xyzfn = None
-        for fn in sim["files"]:
-            if os.path.splitext(fn)[-1].lower() == ".state":
-                statefn = fn
-            if os.path.splitext(fn)[-1].lower() == ".xyz":
-                xyzfn = fn
-        if statefn is not None:
-            print(statefn)
-            topols += state2plecs(
-                statefn,
-                min_writhe_density,
-                min_writhe,
-                connect_dist=connect_dist,
-                no_overlap=no_overlap,
-                om0=om0,
-                plot_every=plot_every,
-                save=save_topols,
-                load=True,
-                include_wm=include_wm,
-            )
+        sim_topols = polymc_sim2topols(
+            sim,
+            min_writhe_density,
+            min_writhe,
+            connect_dist = connect_dist,
+            no_overlap = no_overlap,
+            om0 = om0,
+            plot_every = plot_every,
+            save_topols = save_topols,
+            include_wm = include_wm,
+        )
+        if len(sim_topols) > 0:
+            topols += sim_topols
             num += 1
-            continue
-        if xyzfn is not None:
-            print(xyzfn)
-            topols += xyz2plecs(
-                xyzfn,
-                min_writhe_density,
-                min_writhe,
-                connect_dist=connect_dist,
-                no_overlap=no_overlap,
-                om0=om0,
-                plot_every=plot_every,
-                save=save_topols,
-                load=True,
-                include_wm=include_wm,
-            )
-            num += 1
+        
+        # statefn = None
+        # xyzfn = None
+        # for fn in sim["files"]:
+        #     if os.path.splitext(fn)[-1].lower() == ".state":
+        #         statefn = fn
+        #     if os.path.splitext(fn)[-1].lower() == ".xyz":
+        #         xyzfn = fn
+        # if statefn is not None:
+        #     print(statefn)
+        #     topols += state2plecs(
+        #         statefn,
+        #         min_writhe_density,
+        #         min_writhe,
+        #         connect_dist=connect_dist,
+        #         no_overlap=no_overlap,
+        #         om0=om0,
+        #         plot_every=plot_every,
+        #         save=save_topols,
+        #         load=True,
+        #         include_wm=include_wm,
+        #     )
+        #     num += 1
+        #     continue
+        # if xyzfn is not None:
+        #     print(xyzfn)
+        #     topols += xyz2plecs(
+        #         xyzfn,
+        #         min_writhe_density,
+        #         min_writhe,
+        #         connect_dist=connect_dist,
+        #         no_overlap=no_overlap,
+        #         om0=om0,
+        #         plot_every=plot_every,
+        #         save=save_topols,
+        #         load=True,
+        #         include_wm=include_wm,
+        #     )
+        #     num += 1
     return topols
 
-if __name__ == "__main__":
+def polymc_sim2topols(
+    sim: Dict[str,Any],
+    min_writhe_density: float,
+    min_writhe: float,
+    connect_dist: float = 10,
+    no_overlap: bool = True,
+    om0: float = 1.76,
+    plot_every: int = 0,
+    save_topols: bool = True,
+    include_wm: bool = False,
+) -> List[Dict[str, Any]]:
     
+    statefn = None
+    xyzfn = None
+    for fn in sim["files"]:
+        if os.path.splitext(fn)[-1].lower() == ".state":
+            statefn = fn
+        if os.path.splitext(fn)[-1].lower() == ".xyz":
+            xyzfn = fn
+    if statefn is not None:
+        return state2plecs(
+            statefn,
+            min_writhe_density,
+            min_writhe,
+            connect_dist=connect_dist,
+            no_overlap=no_overlap,
+            om0=om0,
+            plot_every=plot_every,
+            save=save_topols,
+            load=True,
+            include_wm=include_wm,
+        )
+
+    if xyzfn is not None:
+        return xyz2plecs(
+            xyzfn,
+            min_writhe_density,
+            min_writhe,
+            connect_dist=connect_dist,
+            no_overlap=no_overlap,
+            om0=om0,
+            plot_every=plot_every,
+            save=save_topols,
+            load=True,
+            include_wm=include_wm,
+        )
+    return []
+    
+    
+    
+if __name__ == "__main__":
     
     path = "PATH/TO/FILE"
     select = {"force": 0.5, "sigma": 0.02}

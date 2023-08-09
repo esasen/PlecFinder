@@ -24,4 +24,5 @@ from .PyLk import pylk
 from .state2topol import state2plecs
 from .xyz2topol import xyz2plecs
 from .polymc_collect_topols import polymc_collect_topols
+from .polymc_collect_topols import polymc_sim2topols
 from .IOPolyMC import iopolymc
