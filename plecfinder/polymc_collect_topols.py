@@ -89,7 +89,7 @@ class PolyMCTopols:
                 return False
             
             topols = polymc_sim2topols(
-                self.sims[self.index_sims],
+                self.sims[self.index_sim],
                 self.min_writhe_density,
                 self.min_writhe,
                 connect_dist = self.connect_dist,
