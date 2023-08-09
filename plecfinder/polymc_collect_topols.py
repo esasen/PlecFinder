@@ -7,6 +7,84 @@ from .state2topol import state2plecs
 from typing import List, Dict, Any, Callable, Tuple
 
 
+class PolyMCTopols:
+    
+    def __init__(
+        self,
+        path: str,
+        select: Dict[str, Any],
+        min_writhe_density: float,
+        min_writhe: float,
+        connect_dist: float = 10,
+        no_overlap: bool = True,
+        om0: float = 1.76,
+        plot_every: int = 0,
+        save_topols: bool = True,
+        include_wm: bool = False,
+        recursive: bool = False,
+    ):
+        self.path = path
+        self.select = select
+        self.min_writhe_density = min_writhe_density
+        self.min_writhe = min_writhe
+        self.connect_dist = connect_dist
+        self.no_overlap = no_overlap
+        self.om0 = om0
+        self.plot_every = plot_every
+        self.save_topols = save_topols
+        self.include_wm = include_wm
+        self.plot_every = plot_every
+        
+        self.sims = io.querysims(path, select=select, recursive=recursive)
+        self.index_sim = 0
+        self.topols = None
+        self.index_sim_topol = 0
+        
+        self._load_next_sim()
+        
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        
+        if self.index_sim_topol >= len(self.topols):
+            if not self._load_next_sim():
+                raise StopIteration
+        
+        topol = self.topols[self.index_sim_topol] 
+        self.index_sim_topol += 1
+        return topol
+    
+    def _load_next_sim(self):
+        topols = []
+        while len(topols) == 0:
+            if self.index_sim >= len(self.sims):
+                return False
+            
+            topols = polymc_sim2topols(
+                self.sims[self.index_sims],
+                self.min_writhe_density,
+                self.min_writhe,
+                connect_dist = self.connect_dist,
+                no_overlap = self.no_overlap,
+                om0 = self.om0,
+                plot_every = self.plot_every,
+                save_topols = self.save_topols,
+                include_wm = self.include_wm,
+            )
+            self.index_sim += 1
+
+        self.topols = topols
+        self.index_sim_topol = 0
+        return True
+
+        
+        
+        
+
+
+
+
 def polymc_collect_topols(
     path: str,
     select: Dict[str, Any],
@@ -18,7 +96,7 @@ def polymc_collect_topols(
     plot_every: int = 0,
     save_topols: bool = True,
     include_wm: bool = False,
-    valid_dataformats: List[str] = ["state", "xyz"],
+    # valid_dataformats: List[str] = ["state", "xyz"],
     recursive: bool = False,
     num_files: int = None
 ) -> List[Dict[str, Any]]:
