@@ -84,14 +84,14 @@ class PolyMCTopols:
         return topol
     
     def _load_next_sim(self):
+        if self.topols is not None:
+            del self.topols
+            gc.collect()
+        
         topols = []
         while len(topols) == 0:
             if self.index_sim >= len(self.sims):
                 return False
-            
-            if self.topols is not None:
-                del self.topols
-                gc.collect()
             
             topols = polymc_sim2topols(
                 self.sims[self.index_sim],
