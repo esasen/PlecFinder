@@ -33,23 +33,32 @@ def xyz2plecs(
         ).replace(".", "p")
         plec_fn = outpath + "/topols_" + settingsname
 
-    # load from file
-    if load:
-        topols = load_topol_by_specs(outpath, min_writhe_density, min_writhe, connect_dist)
-        # topols = load_topol(plec_fn)
-        if topols is not None:
-            return topols
-
-    # load xyz
-    xyz = read_xyz(xyzfn)
-    configs = xyz["pos"]
-    disc_len = None
-
     # make directory for plots
     if plot_every > 0:
         figpath = outpath + "/figs_" + settingsname
         if not os.path.exists(figpath):
             os.makedirs(figpath)
+
+    # load from file
+    if load:
+        topols = load_topol_by_specs(outpath, min_writhe_density, min_writhe, connect_dist)
+        # topols = load_topol(plec_fn)
+        if topols is not None:
+            print(f'{len(topols)=}')
+            if plot_every > 0:
+                for i,topol in enumerate(topols):
+                    if i % plot_every != 0:
+                        continue
+                    figfn = figpath + "/snapshot_%d" % i
+                    print(figfn)
+                    plot_topol(topol, savefn=figfn)
+            
+            return topols
+    
+    # load xyz
+    xyz = read_xyz(xyzfn)
+    configs = xyz["pos"]
+    disc_len = None
 
     # calculate discretization length
     if disc_len is None:

@@ -72,6 +72,24 @@ def polymc_collect_topols(
             num += 1
     return topols
 
+# def polymc_collect_plecs(
+#     path: str,
+#     select: Dict[str, Any],
+#     min_writhe_density: float,
+#     min_writhe: float,
+#     connect_dist: float = 10,
+#     no_overlap: bool = True,
+#     om0: float = 1.76,
+#     plot_every: int = 0,
+#     save_topols: bool = True,
+#     include_wm: bool = False,
+#     valid_dataformats: List[str] = ["state", "xyz"],
+#     recursive: bool = False,
+#     num_files: int = None
+# ) -> List[Dict[str, Any]]:   
+    
+    
+
 
 if __name__ == "__main__":
     
