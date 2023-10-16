@@ -71,6 +71,8 @@ class PolyMCTopols:
         self.index_sim_topol = 0
         
         self.sim_partial_startid = sim_partial_startid
+        if self.sim_partial_startid < 0:
+            sim_partial_startid = 0
         self.sim_partial_endid   = sim_partial_endid
         
         self._load_next_sim()
@@ -80,6 +82,7 @@ class PolyMCTopols:
 
     def __next__(self):
         if self.index_sim_topol >= len(self.topols) or self.index_sim_topol >= self.sim_partial_endid:
+            print(self.index_sim_topol)
             if not self._load_next_sim():
                 raise StopIteration
         topol = self.topols[self.index_sim_topol] 
@@ -107,7 +110,7 @@ class PolyMCTopols:
                 save_topols = self.save_topols,
                 include_wm = self.include_wm,
             )
-            print(f'{len(topols)}')
+            print(f'{len(topols)=}')
             self.index_sim += 1
 
         self.topols = topols
