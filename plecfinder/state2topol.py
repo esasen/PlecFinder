@@ -49,7 +49,7 @@ def state2plecs(
                     if i % plot_every != 0:
                         continue
                     figfn = figpath + "/snapshot_%d" % i
-                    print(figfn)
+                    print(f'generating figure {figfn}')
                     plot_topol(topol, savefn=figfn)
         
             return topols
@@ -95,7 +95,7 @@ def state2plecs(
         if plot_every > 0:
             if i % plot_every == 0:
                 figfn = figpath + "/snapshot_%d" % i
-                print(figfn)
+                print(f'generating figure {figfn}')
                 plot_topol(topol, savefn=figfn)
 
     # save topology

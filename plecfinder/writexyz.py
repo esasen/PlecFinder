@@ -91,8 +91,8 @@ def addtopology2xyz(xyz, topol, colorby="plectoneme"):
 ########################################################################
 
 if __name__ == "__main__":
-    from plecfinder.iopolymc import ReadState
-    from plecfinder import state2plecs
+    from .IOPolyMC.iopolymc import ReadState
+    from .state2topol import state2plecs
 
     import state2topol as s2p
 

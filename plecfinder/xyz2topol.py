@@ -44,14 +44,12 @@ def xyz2plecs(
         topols = load_topol_by_specs(outpath, min_writhe_density, min_writhe, connect_dist)
         # topols = load_topol(plec_fn)
         if topols is not None:
-            print(f'{len(topols)=}')
             if plot_every > 0:
                 for i,topol in enumerate(topols):
                     if i % plot_every != 0:
                         continue
                     figfn = figpath + "/snapshot_%d" % i
-                    print(figfn)
-                    
+                    print(f'generating figure {figfn}')
                     plot_topol(topol, savefn=figfn)
             
             return topols
@@ -95,7 +93,7 @@ def xyz2plecs(
         if plot_every > 0:
             if i % plot_every == 0:
                 figfn = figpath + "/snapshot_%d" % i
-                print(figfn)
+                print(f'generating figure {figfn}')
                 plot_topol(topol, savefn=figfn)
 
     # save topology

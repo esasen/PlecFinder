@@ -20,7 +20,7 @@ def load_topol_by_specs(path: str, mwd: float, mdr: float, cd: float):
     return None
             
 
-def load_topol(fn: str) -> List[Dict[str, Any]] | None:
+def load_topol(fn: str) -> List[Dict[str, Any]]:
     """
     Load topology form file
     """
@@ -46,7 +46,7 @@ def save_topol(fn: str, topols: List[Dict[str, Any]], to_binary: bool = True) ->
         save_topol_text(fn, topols)
 
 
-def load_topol_text(fn: str) -> List[Dict[str, Any]] | None:
+def load_topol_text(fn: str) -> List[Dict[str, Any]]:
     """
     Load topology form file
     """
@@ -71,7 +71,7 @@ def save_topol_text(fn: str, topols: List[Dict[str, Any]]) -> None:
     np.set_printoptions(threshold=1000)
 
 
-def load_topol_npy(fn: str) -> List[Dict[str, Any]] | None:
+def load_topol_npy(fn: str) -> List[Dict[str, Any]]:
     """
     Load topology form numpy binary
     """

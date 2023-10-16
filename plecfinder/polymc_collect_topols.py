@@ -217,6 +217,7 @@ def polymc_sim2topols(
         if os.path.splitext(fn)[-1].lower() == ".xyz":
             xyzfn = fn
     if statefn is not None:
+        print(f'Loading {statefn}')
         return state2plecs(
             statefn,
             min_writhe_density,
@@ -231,6 +232,7 @@ def polymc_sim2topols(
         )
 
     if xyzfn is not None:
+        print(f'Loading {xyzfn}')
         return xyz2plecs(
             xyzfn,
             min_writhe_density,
