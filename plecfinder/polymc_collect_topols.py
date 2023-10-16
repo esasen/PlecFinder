@@ -50,6 +50,8 @@ class PolyMCTopols:
         save_topols: bool = True,
         include_wm: bool = False,
         recursive: bool = False,
+        sim_partial_startid: int = 0,
+        sim_partial_endid: int = 1000000000
     ):
         self.path = path
         self.select = select
@@ -68,17 +70,18 @@ class PolyMCTopols:
         self.topols = None
         self.index_sim_topol = 0
         
+        self.sim_partial_startid = sim_partial_startid
+        self.sim_partial_endid   = sim_partial_endid
+        
         self._load_next_sim()
         
     def __iter__(self):
         return self
 
     def __next__(self):
-        
-        if self.index_sim_topol >= len(self.topols):
+        if self.index_sim_topol >= len(self.topols) or self.index_sim_topol > self.sim_partial_endid:
             if not self._load_next_sim():
                 raise StopIteration
-        
         topol = self.topols[self.index_sim_topol] 
         self.index_sim_topol += 1
         return topol
@@ -104,10 +107,11 @@ class PolyMCTopols:
                 save_topols = self.save_topols,
                 include_wm = self.include_wm,
             )
+            print(f'{len(topols)}')
             self.index_sim += 1
 
         self.topols = topols
-        self.index_sim_topol = 0
+        self.index_sim_topol = self.sim_partial_startid
         return True
 
         
