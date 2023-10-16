@@ -79,9 +79,6 @@ class PolyMCTopols:
         return self
 
     def __next__(self):
-        # print('#######')
-        # print(self.index_sim_topol)
-        # print(self.sim_partial_endid)
         if self.index_sim_topol >= len(self.topols) or self.index_sim_topol >= self.sim_partial_endid:
             if not self._load_next_sim():
                 raise StopIteration
