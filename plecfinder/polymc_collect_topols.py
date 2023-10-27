@@ -4,6 +4,7 @@ import numpy as np
 from .IOPolyMC import iopolymc as io
 from .xyz2topol import xyz2plecs
 from .state2topol import state2plecs
+from .in2topol import in2plecs
 
 from typing import List, Dict, Any, Callable, Tuple
 
@@ -118,12 +119,6 @@ class PolyMCTopols:
         return True
 
         
-        
-        
-
-
-
-
 def polymc_collect_topols(
     path: str,
     select: Dict[str, Any],
@@ -163,45 +158,6 @@ def polymc_collect_topols(
         if len(sim_topols) > 0:
             topols += sim_topols
             num += 1
-        
-        # statefn = None
-        # xyzfn = None
-        # for fn in sim["files"]:
-        #     if os.path.splitext(fn)[-1].lower() == ".state":
-        #         statefn = fn
-        #     if os.path.splitext(fn)[-1].lower() == ".xyz":
-        #         xyzfn = fn
-        # if statefn is not None:
-        #     print(statefn)
-        #     topols += state2plecs(
-        #         statefn,
-        #         min_writhe_density,
-        #         min_writhe,
-        #         connect_dist=connect_dist,
-        #         no_overlap=no_overlap,
-        #         om0=om0,
-        #         plot_every=plot_every,
-        #         save=save_topols,
-        #         load=True,
-        #         include_wm=include_wm,
-        #     )
-        #     num += 1
-        #     continue
-        # if xyzfn is not None:
-        #     print(xyzfn)
-        #     topols += xyz2plecs(
-        #         xyzfn,
-        #         min_writhe_density,
-        #         min_writhe,
-        #         connect_dist=connect_dist,
-        #         no_overlap=no_overlap,
-        #         om0=om0,
-        #         plot_every=plot_every,
-        #         save=save_topols,
-        #         load=True,
-        #         include_wm=include_wm,
-        #     )
-        #     num += 1
     return topols
 
 def polymc_sim2topols(
@@ -215,43 +171,45 @@ def polymc_sim2topols(
     save_topols: bool = True,
     include_wm: bool = False,
 ) -> List[Dict[str, Any]]:
-    
-    statefn = None
-    xyzfn = None
     for fn in sim["files"]:
         if os.path.splitext(fn)[-1].lower() == ".state":
-            statefn = fn
+            print(f'Loading {fn}')
+            return state2plecs(
+                fn,
+                min_writhe_density,
+                min_writhe,
+                connect_dist=connect_dist,
+                no_overlap=no_overlap,
+                om0=om0,
+                plot_every=plot_every,
+                save=save_topols,
+                load=True,
+                include_wm=include_wm,
+            )
         if os.path.splitext(fn)[-1].lower() == ".xyz":
-            xyzfn = fn
-    if statefn is not None:
-        print(f'Loading {statefn}')
-        return state2plecs(
-            statefn,
-            min_writhe_density,
-            min_writhe,
-            connect_dist=connect_dist,
-            no_overlap=no_overlap,
-            om0=om0,
-            plot_every=plot_every,
-            save=save_topols,
-            load=True,
-            include_wm=include_wm,
-        )
-
-    if xyzfn is not None:
-        print(f'Loading {xyzfn}')
-        return xyz2plecs(
-            xyzfn,
-            min_writhe_density,
-            min_writhe,
-            connect_dist=connect_dist,
-            no_overlap=no_overlap,
-            om0=om0,
-            plot_every=plot_every,
-            save=save_topols,
-            load=True,
-            include_wm=include_wm,
-        )
+            print(f'Loading {fn}')
+            return xyz2plecs(
+                fn,
+                min_writhe_density,
+                min_writhe,
+                connect_dist=connect_dist,
+                no_overlap=no_overlap,
+                om0=om0,
+                plot_every=plot_every,
+                save=save_topols,
+                load=True,
+                include_wm=include_wm,
+            )
+        if os.path.splitext(fn)[-1].lower() == ".in":
+            topols = in2plecs(
+                fn,
+                min_writhe_density,
+                min_writhe,
+                connect_dist=connect_dist
+            )
+            if topols is None:
+                topols = []
+            return topols
     return []
     
     

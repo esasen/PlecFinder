@@ -79,7 +79,13 @@ def load_topol_npy(fn: str) -> List[Dict[str, Any]]:
         fn = fn + ".npy"
     if not os.path.isfile(fn):
         return None
-    topols = np.load(fn, allow_pickle=True)
+    try:
+        topols = np.load(fn, allow_pickle=True)
+    except EOFError as e:
+        print(f'EOFError exception encountered while reading {fn}.')
+        print(f'Deleting file.')
+        os.remove(fn)         
+        return None
     if isinstance(topols,np.ndarray):
         topols = list(topols)
     return topols

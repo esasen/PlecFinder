@@ -23,6 +23,7 @@ from .PyLk import pylk
 # polymc state and xyz loads
 from .state2topol import state2plecs
 from .xyz2topol import xyz2plecs
+from  .in2topol import in2plecs
 from .polymc_collect_topols import polymc_collect_topols
 from .polymc_collect_topols import polymc_sim2topols
 from .polymc_collect_topols import read_polymc_topols
