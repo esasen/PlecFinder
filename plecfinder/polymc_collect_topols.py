@@ -171,6 +171,7 @@ def polymc_sim2topols(
     save_topols: bool = True,
     include_wm: bool = False,
 ) -> List[Dict[str, Any]]:
+
     for fn in sim["files"]:
         if os.path.splitext(fn)[-1].lower() == ".state":
             print(f'Loading {fn}')
@@ -186,6 +187,7 @@ def polymc_sim2topols(
                 load=True,
                 include_wm=include_wm,
             )
+    for fn in sim["files"]:
         if os.path.splitext(fn)[-1].lower() == ".xyz":
             print(f'Loading {fn}')
             return xyz2plecs(
@@ -200,6 +202,7 @@ def polymc_sim2topols(
                 load=True,
                 include_wm=include_wm,
             )
+    for fn in sim["files"]:
         if os.path.splitext(fn)[-1].lower() == ".in":
             topols = in2plecs(
                 fn,
