@@ -113,10 +113,18 @@ class PolyMCTopols:
             )
             print(f'{len(topols)=}')
             self.index_sim += 1
-
-        self.topols = topols
-        self.index_sim_topol = self.sim_partial_startid
-        return True
+            
+            if len(topols) <= self.sim_partial_startid:
+                topols = []
+                continue
+                
+        self.topols = topols[self.sim_partial_startid:]
+        self.index_sim_topol = 0
+        return True   
+            
+        # self.topols = topols
+        # self.index_sim_topol = self.sim_partial_startid
+        # return True
 
         
 def polymc_collect_topols(
