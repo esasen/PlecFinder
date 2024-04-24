@@ -116,9 +116,9 @@ def find_plecs(
     )
 
     if len(branches) > 0:
-        if no_overlap:
-            branches = _remove_branch_overlap(pWM, branches)
-            branches, tracers = _remove_flagged_branches(branches, tracers)
+        # if no_overlap:
+        #     branches = _remove_branch_overlap(pWM, branches)
+        #     branches, tracers = _remove_flagged_branches(branches, tracers)
 
         # collect branches into plectonemes
         combbranches, contained_branch_ids = _combine_branches(
