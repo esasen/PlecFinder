@@ -254,6 +254,11 @@ def _remove_flagged_branches(branches, tracers):
 
 def unify_branches(branches):
     treeroots, treebranches = build_branchtree(branches)
+    
+    # for tb in treebranches:
+        
+    
+    
     for treebranch in treebranches:
         if treebranch['root'][0] == -1:
             continue
