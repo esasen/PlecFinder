@@ -2,6 +2,7 @@ import os, sys
 import numpy as np
 from numba import jit
 from .PyLk import pylk
+from .branching import build_branchtree
 
 from typing import List, Dict, Any, Tuple
 
@@ -22,6 +23,7 @@ def find_plecs(
     connect_dist: float = 10.0,
     om0: float = 1.76,
     include_wm: bool = False,
+    unify_branch_pieces = True
 ) -> List[Dict[str, Any]]:
     """Calculates the topology of a given configuration.
 
@@ -127,6 +129,10 @@ def find_plecs(
         branches = _resolve_inconsistent_branches(pWM, branches)
         branches, tracers = _remove_flagged_branches(branches, tracers)
 
+        if unify_branch_pieces:
+            treebranches = unify_branches(branches)
+            branches, tracers = _remove_flagged_branches(branches, tracers)
+
         ##################
         # collect branches into plectonemes
         combbranches, contained_branch_ids = _combine_branches(
@@ -230,7 +236,6 @@ def calculate_WM(conf):
 ########################################################################
 # remove tracers for removed branches
 
-
 # @jit(nopython=True, cache=True)
 def _remove_flagged_branches(branches, tracers):
     """
@@ -243,6 +248,24 @@ def _remove_flagged_branches(branches, tracers):
             nbranches.append(branches[i])
             ntracers.append(tracers[i])
     return nbranches, ntracers
+
+########################################################################
+# unify branches
+
+def unify_branches(branches):
+    treeroots, treebranches = build_branchtree(branches)
+    for treebranch in treebranches:
+        if treebranch['root'][0] == -1:
+            continue
+        if len(treebranch["branches"]) == 1:
+            subbr = treebranch["branches"][0]
+            treebranch["root"][1] = subbr['root'][1]
+            treebranch["root"][2] = subbr['root'][2]
+            treebranch['branches'] = subbr['branches']
+
+            # flag subbranch for deletition
+            subbr['root'][0] = -1
+    return treebranches
 
 
 ########################################################################
@@ -583,7 +606,6 @@ def _resolve_inconsistent_branches(WM: np.ndarray, branches):
 
 ########################################################################
 ########################################################################
-
 
 
 

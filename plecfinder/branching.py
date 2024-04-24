@@ -30,12 +30,12 @@ def build_branchtree(branches_or_topol) -> Tuple[List[Dict], List[Dict]]:
         branches = branches_or_topol
 
     treeroots = list()
-    branches = [{"root": branch, "branches": list()} for branch in branches]
+    treebranches = [{"root": branch, "branches": list()} for branch in branches]
 
-    for i, br in enumerate(branches):
+    for i, br in enumerate(treebranches):
         src_branch = None
         for j in range(i - 1, -1, -1):
-            cbr = branches[j]
+            cbr = treebranches[j]
             if is_downstream(br["root"], cbr["root"]):
                 src_branch = cbr
                 break
@@ -44,7 +44,7 @@ def build_branchtree(branches_or_topol) -> Tuple[List[Dict], List[Dict]]:
         else:
             src_branch["branches"].append(br)
 
-    return treeroots, branches
+    return treeroots, treebranches
 
 
 def find_endloops(branches):
@@ -58,8 +58,15 @@ def find_endloops(branches):
 
 
 def is_downstream(branch, upbranch):
-    if branch["x1"] < upbranch["x1"]:
-        return False
-    if branch["y1"] > upbranch["y1"]:
-        return False
-    return True
+    if isinstance(branch,dict):
+        if branch["x1"] < upbranch["x1"]:
+            return False
+        if branch["y1"] > upbranch["y1"]:
+            return False
+        return True
+    else:
+        if branch[0] < upbranch[0]:
+            return False
+        if branch[2] > upbranch[2]:
+            return False
+        return True
