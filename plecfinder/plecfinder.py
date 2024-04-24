@@ -151,12 +151,6 @@ def find_plecs(
     # unify branches
     if unify_branch_pieces:
         treebranches = unify_branches(branches)
-        
-        for branch in branches:
-            if branch[0] == -1:
-                print('detected')
-                sys.exit()
-        
         branches, tracers = _remove_flagged_branches(branches, tracers)
     ############################
     # assign topology dictionary
