@@ -118,6 +118,9 @@ def find_plecs(
     #######################################
     #######################################
     
+    branches = _remove_branch_overlap(pWM, branches)
+    branches, tracers = _remove_flagged_branches(branches, tracers)
+    
     flip_positive = True
     remove_negative_wr = False
     
