@@ -159,9 +159,9 @@ def find_plecs(
         color = colors[i]
         ax1.add_patch(
             Rectangle(
-                (branch["x1"], branch["y1"]),
-                (branch["x2"] - branch["x1"]),
-                (branch["y2"] - branch["y1"]),
+                (branch[0], branch[2]),
+                (branch[1] - branch[0]),
+                (branch[3] - branch[2]),
                 edgecolor="black",
                 facecolor="none",
                 fill=False,
@@ -170,17 +170,17 @@ def find_plecs(
             )
         )
         ax1.fill_between(
-            [branch["x1"], branch["x2"]],
-            [branch["y1"], branch["y1"]],
-            [branch["y2"], branch["y2"]],
+            [branch[0], branch[1]],
+            [branch[2], branch[2]],
+            [branch[3], branch[3]],
             alpha=0.5,
             color=colors[i],
         )
         ax1.add_patch(
             Rectangle(
-                (branch["y1"], branch["x1"]),
-                (branch["y2"] - branch["y1"]),
-                (branch["x2"] - branch["x1"]),
+                (branch[0], branch[0]),
+                (branch[2] - branch[2]),
+                (branch[1] - branch[0]),
                 edgecolor="black",
                 facecolor="none",
                 fill=False,
@@ -189,9 +189,9 @@ def find_plecs(
             )
         )
         ax1.fill_between(
-            [branch["y1"], branch["y2"]],
-            [branch["x1"], branch["x1"]],
-            [branch["x2"], branch["x2"]],
+            [branch[0], branch[2]],
+            [branch[0], branch[0]],
+            [branch[1], branch[1]],
             alpha=0.5,
             color=colors[i],
         )    
