@@ -7,23 +7,27 @@ from typing import Dict, Any, List, Tuple
 ########################################################################
 
 
-def build_branchtree(branches) -> Tuple[List[Dict], List[Dict]]:
+def build_branchtree(branches_or_topol) -> Tuple[List[Dict], List[Dict]]:
     """build branch tree for chain topology
 
     Arguments:
     ----------
         branches : List[Dict]
-            List of branch dictionaries
+            List of branch dictionaries or full topol dictionary
 
     Returns:
     ----------
         tree structure of branches
             list of lists
     """
-    # if not topol["no_overlap"]:
-    #     raise ValueError(
-    #         "Requires branchoverlap to be removed! Set no_overlap to True when running find_plecs"
-    #     )
+    if isinstance(branches_or_topol,dict):
+        branches = branches_or_topol['branches']
+        if not branches_or_topol["no_overlap"]:
+            raise ValueError(
+                "Requires branchoverlap to be removed! Set no_overlap to True when running find_plecs"
+            )
+    else:
+        branches = branches_or_topol
 
     treeroots = list()
     branches = [{"root": branch, "branches": list()} for branch in branches]
