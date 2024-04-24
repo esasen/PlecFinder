@@ -128,7 +128,7 @@ def find_plecs(
     for i in range(100):
         colors += plt.get_cmap("tab20c").colors
     
-    N = topol["N"]
+    N = len(conf)
     fig = plt.figure(
         figsize=(2 * 8.7 / 2.54, 2 * 8.7 / 2.54), dpi=100, facecolor="w", edgecolor="k"
     )
@@ -136,7 +136,7 @@ def find_plecs(
     ax1.plot([0, N], [0, N], lw=2, alpha=0.5, color="black")
     if "wm" in topol.keys():
         print("has wm")
-        wm = np.array(topol["wm"])
+        wm = WM
         if flip_positive:
             wm = np.sign(np.mean(wm)) * wm
         if remove_negative_wr:
@@ -147,14 +147,14 @@ def find_plecs(
     ax1.set_xlim([0, N])
     ax1.set_ylim([0, N])
     
-    for i, tracer in enumerate(topol["tracers"]):
+    for i, tracer in enumerate(tracers):
         tpts = np.array(tracer["points"])
         ax1.scatter(tpts[:, 0], tpts[:, 1], s=8, color=colors[i])
         ax1.scatter(tpts[:, 1], tpts[:, 0], s=8, color=colors[i])
         ax1.plot(tpts[:, 0], tpts[:, 1], color="black", lw=0.5)
         ax1.plot(tpts[:, 1], tpts[:, 0], color="black", lw=0.5)
 
-    for i, branch in enumerate(topol["branches"]):
+    for i, branch in enumerate(branches):
         color = colors[i]
         ax1.add_patch(
             Rectangle(
