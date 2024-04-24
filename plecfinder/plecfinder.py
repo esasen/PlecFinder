@@ -129,10 +129,6 @@ def find_plecs(
         branches = _resolve_inconsistent_branches(pWM, branches)
         branches, tracers = _remove_flagged_branches(branches, tracers)
 
-        if unify_branch_pieces:
-            treebranches = unify_branches(branches)
-            branches, tracers = _remove_flagged_branches(branches, tracers)
-
         ##################
         # collect branches into plectonemes
         combbranches, contained_branch_ids = _combine_branches(
@@ -151,6 +147,11 @@ def find_plecs(
         plecs = list()
         plec_branch_ids = list()
 
+    ##################
+    # unify branches
+    if unify_branch_pieces:
+        treebranches = unify_branches(branches)
+        branches, tracers = _remove_flagged_branches(branches, tracers)
     ############################
     # assign topology dictionary
 
@@ -254,11 +255,6 @@ def _remove_flagged_branches(branches, tracers):
 
 def unify_branches(branches):
     treeroots, treebranches = build_branchtree(branches)
-    
-    # for tb in treebranches:
-        
-    
-    
     for treebranch in treebranches:
         if treebranch['root'][0] == -1:
             continue
