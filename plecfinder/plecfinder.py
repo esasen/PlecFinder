@@ -118,127 +118,21 @@ def find_plecs(
     #######################################
     #######################################
     
-    branches = _remove_branch_overlap(pWM, branches)
-    branches, tracers = _remove_flagged_branches(branches, tracers)
-    
-    # collect branches into plectonemes
-    combbranches, contained_branch_ids = _combine_branches(
-        pWM, branches, min_writhe_density, disc_len, om0
-    )
-    
-    
-    flip_positive = True
-    remove_negative_wr = False
-    
-    from matplotlib import pyplot as plt
-    from matplotlib.patches import Rectangle
-    
-    colors = list()
-    for i in range(100):
-        colors += plt.get_cmap("tab20c").colors
-    
-    N = len(conf)
-    fig = plt.figure(
-        figsize=(2 * 8.7 / 2.54, 2 * 8.7 / 2.54), dpi=100, facecolor="w", edgecolor="k"
-    )
-    ax1 = plt.subplot2grid((1, 1), (0, 0), colspan=1, rowspan=1)
-    ax1.plot([0, N], [0, N], lw=2, alpha=0.5, color="black")
-    if True:
-        print("has wm")
-        wm = WM
-        if flip_positive:
-            wm = np.sign(np.mean(wm)) * wm
-        if remove_negative_wr:
-            wm[wm < 0] = 0
-        ax1.matshow(
-            wm.T, cmap=plt.get_cmap("Greys"), aspect="auto", interpolation="none"
-        )
-        
-    ax1.set_xlim([0, N])
-    ax1.set_ylim([0, N])
-    
-    for i, tracer in enumerate(tracers):
-        tpts = np.array([[pt[0], pt[1]] for pt in tracer])
-        ax1.scatter(tpts[:, 0], tpts[:, 1], s=8, color=colors[i])
-        ax1.scatter(tpts[:, 1], tpts[:, 0], s=8, color=colors[i])
-        ax1.plot(tpts[:, 0], tpts[:, 1], color="black", lw=0.5)
-        ax1.plot(tpts[:, 1], tpts[:, 0], color="black", lw=0.5)
-
-    for i, branch in enumerate(branches):
-        color = colors[i]
-        ax1.add_patch(
-            Rectangle(
-                (branch[0], branch[2]),
-                (branch[1] - branch[0]),
-                (branch[3] - branch[2]),
-                edgecolor="black",
-                facecolor="none",
-                fill=False,
-                lw=1,
-                alpha=0.5,
-            )
-        )
-        ax1.fill_between(
-            [branch[0], branch[1]],
-            [branch[2], branch[2]],
-            [branch[3], branch[3]],
-            alpha=0.5,
-            color=colors[i],
-        )
-    
-    for combbranch in combbranches:
-        ax1.add_patch(
-            Rectangle(
-                (combbranch[0], combbranch[2]),
-                (combbranch[1] - combbranch[0]),
-                (combbranch[3] - combbranch[2]),
-                edgecolor="black",
-                facecolor="none",
-                fill=False,
-                lw=1,
-                alpha=0.5,
-            )
-        )
-        
-        
-        
-        
-        # ax1.add_patch(
-        #     Rectangle(
-        #         (branch[2], branch[0]),
-        #         (branch[3] - branch[2]),
-        #         (branch[1] - branch[0]),
-        #         edgecolor="black",
-        #         facecolor="none",
-        #         fill=False,
-        #         lw=1,
-        #         alpha=0.5,
-        #     )
-        # )
-        # ax1.fill_between(
-        #     [branch[2], branch[3]],
-        #     [branch[0], branch[0]],
-        #     [branch[1], branch[1]],
-        #     alpha=0.5,
-        #     color=colors[i],
-        # )    
-    
-    plt.show() 
-    
-    
-    
-    #######################################
-    #######################################
-    
     if len(branches) > 0:
         if no_overlap:
             branches = _remove_branch_overlap(pWM, branches)
             branches, tracers = _remove_flagged_branches(branches, tracers)
+        ##################
+        # resolve branch conflicts
+        branches = _resolve_inconsistent_branches(pWM, branches)
+        branches, tracers = _remove_flagged_branches(branches, tracers)
 
+        ##################
         # collect branches into plectonemes
         combbranches, contained_branch_ids = _combine_branches(
             pWM, branches, min_writhe_density, disc_len, om0
         )
+        
         plecs = _define_plecs(
             pWM, combbranches, min_writhe_density, plec_min_writhe, disc_len, om0
         )
@@ -475,32 +369,6 @@ def _find_branches(
 
         branchtracers.append(tracerband)
         ################################################################
-        # ~ branchtracers.append(tracer)
-
-    # ~ ####################
-    # ~ fig = plt.figure(figsize=(7.4,10), dpi=100, facecolor='w',edgecolor='k')
-    # ~ ax1 = plt.subplot2grid((3,1), (0, 0),colspan=1,rowspan=2)
-    # ~ ax2 = plt.subplot2grid((3,1), (2, 0),colspan=1,rowspan=1)
-    # ~ N = len(WM)
-    # ~ ax1.matshow(WM.T,cmap=plt.get_cmap('Greys'),aspect='auto',interpolation='none')
-    # ~ ax1.plot([0,N],[0,N],lw=2,alpha=0.5,color='black')
-    # ~ ax1.set_xlim([0,N])
-    # ~ ax1.set_ylim([0,N])
-    # ~ for tracer in tracers:
-    # ~ tpts = np.array(tracer)
-    # ~ ax1.scatter(tpts[:,0],tpts[:,1],s=10)
-    # ~ for branch in branches:
-    # ~ ax1.add_patch(Rectangle((branch[0],branch[2]), (branch[1]-branch[0]), (branch[3]-branch[2]),
-    # ~ edgecolor = 'black',
-    # ~ facecolor = 'none',
-    # ~ fill=False,
-    # ~ lw=1,
-    # ~ alpha=1))
-    # ~ ax1.fill_between([branch[0],branch[1]], [branch[2],branch[2]],[branch[3],branch[3]],alpha=0.5)
-    # ~ ax2.set_xlim([0,len(WM)])
-    # ~ plt.tight_layout()
-    # ~ plt.show()
-    # ~ ####################
     return branches, branchtracers
 
 
@@ -663,6 +531,60 @@ def _remove_branchpair_overlap(WM, xlim1, xlim2, ylim1, ylim2):
 
 
 ########################################################################
+########################################################################
+
+def _resolve_inconsistent_branches(WM: np.ndarray, branches):
+    # we assume that overlap was already removed 
+    n = len(branches)
+    
+    # count number of downsteam branches
+    downstream_counts = list()
+    for i in range(n):
+        count = 0
+        for j in range(i+1):
+            if _is_downstream(branches[i][0],branches[i][3],branches[j][0],branches[j][3]):
+                count += 1
+        downstream_counts.append(count)
+    
+    # Check backward conflicts
+    for i in range(1,n):
+        a1 = int(branches[i][0])
+        a2 = int(branches[i][3])
+        conflict_wr = 0
+        conflict_ids = []
+        for j in range(0,i):
+            if branches[j][0] == -1:
+                continue
+            
+            b1 = branches[j][0]
+            b2 = branches[j][3]
+            # if i is inside rang of j but not downstream
+            if b1 < a1 < b2 and not _is_downstream(b1,b2,a1,a2):
+                wr = _cal_branch_writhe(WM,*branches[j])
+                conflict_ids.append(j)
+                conflict_wr += wr
+        
+        if conflict_wr > 0:
+            ref_wr = _cal_branch_writhe(WM,*branches[i])
+            if ref_wr > conflict_wr:
+                for cid in conflict_ids:
+                    branches[cid][0] = -1
+            else:
+                # check forward conflicts
+                #
+                #
+                #
+                #
+                #
+                branches[i][0] = -1
+        
+    return branches
+
+
+########################################################################
+########################################################################
+
+
 
 
 # @jit(nopython=True, cache=True)
@@ -890,27 +812,39 @@ def __cal_disc_len(conf):
 ########################################################################
 ########################################################################
 
-
 if __name__ == "__main__":
-    from .IOPolyMC.iopolymc import read_state
+    from .IOPolyMC.iopolymc import read_state, load_xyz
+    from .branching import build_branchtree
 
-    fn = "plecfinder/examples/tweezer_f0p5_s0p035.state"
-    state = read_state(fn)
-
-    configs = state["pos"]
+    
+    xyzfn = '/home/pol_schiessel/ensk996e/Projects/MultiPlec/Paper/sims/dump/f0p4_r3.xyz'
+    xyz = load_xyz(xyzfn)
+    
+    configs = xyz["pos"]
 
     min_writhe_density = 0.01
     plec_min_writhe = 0.5
+    connect_dist = 10.0
 
     for i, config in enumerate(configs):
+        
+        if i < 13 and i not in [0,12]:
+            continue
+        
         topol = find_plecs(
             config,
             min_writhe_density,
             plec_min_writhe,
             disc_len=None,
             no_overlap=True,
-            connect_dist=10.0,
+            connect_dist=connect_dist,
         )
         # sys.exit()
+        from .plottopol import plot_topol
+        
+        plot_topol(topol)
 
-        print(topol)
+        # treeroots, treebranches = build_branchtree(topol)
+        # plot_branchtree(treebranches,topol)
+
+
