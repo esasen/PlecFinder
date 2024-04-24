@@ -149,7 +149,7 @@ def find_plecs(
     ax1.set_ylim([0, N])
     
     for i, tracer in enumerate(tracers):
-        tpts = np.array(tracer["points"])
+        tpts = np.array([[pt[0], pt[1]] for pt in tracer])
         ax1.scatter(tpts[:, 0], tpts[:, 1], s=8, color=colors[i])
         ax1.scatter(tpts[:, 1], tpts[:, 0], s=8, color=colors[i])
         ax1.plot(tpts[:, 0], tpts[:, 1], color="black", lw=0.5)
