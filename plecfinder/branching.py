@@ -7,26 +7,26 @@ from typing import Dict, Any, List, Tuple
 ########################################################################
 
 
-def build_branchtree(topol: Dict[str, Any]) -> Tuple[List[Dict], List[Dict]]:
+def build_branchtree(branches) -> Tuple[List[Dict], List[Dict]]:
     """build branch tree for chain topology
 
     Arguments:
     ----------
-        topol : dictionary
-            topology dictionary
+        branches : List[Dict]
+            List of branch dictionaries
 
     Returns:
     ----------
         tree structure of branches
             list of lists
     """
-    if not topol["no_overlap"]:
-        raise ValueError(
-            "Requires branchoverlap to be removed! Set no_overlap to True when running find_plecs"
-        )
+    # if not topol["no_overlap"]:
+    #     raise ValueError(
+    #         "Requires branchoverlap to be removed! Set no_overlap to True when running find_plecs"
+    #     )
 
     treeroots = list()
-    branches = [{"root": branch, "branches": list()} for branch in topol["branches"]]
+    branches = [{"root": branch, "branches": list()} for branch in branches]
 
     for i, br in enumerate(branches):
         src_branch = None
@@ -43,9 +43,9 @@ def build_branchtree(topol: Dict[str, Any]) -> Tuple[List[Dict], List[Dict]]:
     return treeroots, branches
 
 
-def find_endloops(topol: Dict):
+def find_endloops(branches):
     endpoints = list()
-    treeroots, branches = build_branchtree(topol)
+    treeroots, branches = build_branchtree(branches)
     for branch in branches:
         if len(branch['branches']) == 0:
             endpoint = 0.5*(branch['root']['x2'] + branch['root']['y1'])
