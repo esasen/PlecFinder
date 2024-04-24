@@ -134,7 +134,7 @@ def find_plecs(
     )
     ax1 = plt.subplot2grid((1, 1), (0, 0), colspan=1, rowspan=1)
     ax1.plot([0, N], [0, N], lw=2, alpha=0.5, color="black")
-    if "wm" in topol.keys():
+    if True:
         print("has wm")
         wm = WM
         if flip_positive:
@@ -144,6 +144,7 @@ def find_plecs(
         ax1.matshow(
             wm.T, cmap=plt.get_cmap("Greys"), aspect="auto", interpolation="none"
         )
+        
     ax1.set_xlim([0, N])
     ax1.set_ylim([0, N])
     
