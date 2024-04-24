@@ -114,7 +114,94 @@ def find_plecs(
     branches, tracers = _find_branches(
         pWM, min_writhe_density, disc_len, connect_dist=connect_dist, om0=om0
     )
+    
+    #######################################
+    #######################################
+    
+    flip_positive = True
+    remove_negative_wr = False
+    
+    from matplotlib import pyplot as plt
+    from matplotlib.patches import Rectangle
+    
+    colors = list()
+    for i in range(100):
+        colors += plt.get_cmap("tab20c").colors
+    
+    N = topol["N"]
+    fig = plt.figure(
+        figsize=(2 * 8.7 / 2.54, 2 * 8.7 / 2.54), dpi=100, facecolor="w", edgecolor="k"
+    )
+    ax1 = plt.subplot2grid((1, 1), (0, 0), colspan=1, rowspan=1)
+    ax1.plot([0, N], [0, N], lw=2, alpha=0.5, color="black")
+    if "wm" in topol.keys():
+        print("has wm")
+        wm = np.array(topol["wm"])
+        if flip_positive:
+            wm = np.sign(np.mean(wm)) * wm
+        if remove_negative_wr:
+            wm[wm < 0] = 0
+        ax1.matshow(
+            wm.T, cmap=plt.get_cmap("Greys"), aspect="auto", interpolation="none"
+        )
+    ax1.set_xlim([0, N])
+    ax1.set_ylim([0, N])
+    
+    for i, tracer in enumerate(topol["tracers"]):
+        tpts = np.array(tracer["points"])
+        ax1.scatter(tpts[:, 0], tpts[:, 1], s=8, color=colors[i])
+        ax1.scatter(tpts[:, 1], tpts[:, 0], s=8, color=colors[i])
+        ax1.plot(tpts[:, 0], tpts[:, 1], color="black", lw=0.5)
+        ax1.plot(tpts[:, 1], tpts[:, 0], color="black", lw=0.5)
 
+    for i, branch in enumerate(topol["branches"]):
+        color = colors[i]
+        ax1.add_patch(
+            Rectangle(
+                (branch["x1"], branch["y1"]),
+                (branch["x2"] - branch["x1"]),
+                (branch["y2"] - branch["y1"]),
+                edgecolor="black",
+                facecolor="none",
+                fill=False,
+                lw=1,
+                alpha=0.5,
+            )
+        )
+        ax1.fill_between(
+            [branch["x1"], branch["x2"]],
+            [branch["y1"], branch["y1"]],
+            [branch["y2"], branch["y2"]],
+            alpha=0.5,
+            color=colors[i],
+        )
+        ax1.add_patch(
+            Rectangle(
+                (branch["y1"], branch["x1"]),
+                (branch["y2"] - branch["y1"]),
+                (branch["x2"] - branch["x1"]),
+                edgecolor="black",
+                facecolor="none",
+                fill=False,
+                lw=1,
+                alpha=0.5,
+            )
+        )
+        ax1.fill_between(
+            [branch["y1"], branch["y2"]],
+            [branch["x1"], branch["x1"]],
+            [branch["x2"], branch["x2"]],
+            alpha=0.5,
+            color=colors[i],
+        )    
+    
+    plt.show() 
+    
+    
+    
+    #######################################
+    #######################################
+    
     if len(branches) > 0:
         if no_overlap:
             branches = _remove_branch_overlap(pWM, branches)
@@ -386,7 +473,6 @@ def _find_branches(
     # ~ plt.tight_layout()
     # ~ plt.show()
     # ~ ####################
-
     return branches, branchtracers
 
 
@@ -689,7 +775,7 @@ def _define_plecs(WM, combbranches, min_writhe_density, min_writhe, disc_len, om
         )
         candidate_plecs.append(candidate_plec)
 
-    # candidate_plecs = _remove_branch_overlap(WM, candidate_plecs)
+    candidate_plecs = _remove_branch_overlap(WM, candidate_plecs)
 
     plecs = list()
     for i, candidate_plec in enumerate(candidate_plecs):
