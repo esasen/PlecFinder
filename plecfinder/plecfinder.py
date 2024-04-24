@@ -121,6 +121,12 @@ def find_plecs(
     branches = _remove_branch_overlap(pWM, branches)
     branches, tracers = _remove_flagged_branches(branches, tracers)
     
+    # collect branches into plectonemes
+    combbranches, contained_branch_ids = _combine_branches(
+        pWM, branches, min_writhe_density, disc_len, om0
+    )
+    
+    
     flip_positive = True
     remove_negative_wr = False
     
@@ -179,6 +185,22 @@ def find_plecs(
             alpha=0.5,
             color=colors[i],
         )
+        
+        ax1.add_patch(
+            Rectangle(
+                (combbranches[0], combbranches[2]),
+                (combbranches[1] - combbranches[0]),
+                (combbranches[3] - combbranches[2]),
+                edgecolor="black",
+                facecolor="none",
+                fill=False,
+                lw=1,
+                alpha=0.5,
+            )
+        )
+        
+        
+        
         
         # ax1.add_patch(
         #     Rectangle(
