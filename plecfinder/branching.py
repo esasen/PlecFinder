@@ -52,7 +52,10 @@ def find_endloops(branches):
     treeroots, branches = build_branchtree(branches)
     for branch in branches:
         if len(branch['branches']) == 0:
-            endpoint = 0.5*(branch['root']['x2'] + branch['root']['y1'])
+            if isinstance(branch,dict):
+                endpoint = 0.5*(branch['root']['x2'] + branch['root']['y1'])
+            else:
+                endpoint = 0.5*(branch['root'][1] + branch['root'][2])
             endpoints.append(endpoint)
     return endpoints
 

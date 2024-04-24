@@ -262,7 +262,8 @@ def unify_branches(branches):
             treebranch["root"][1] = subbr['root'][1]
             treebranch["root"][2] = subbr['root'][2]
             treebranch['branches'] = subbr['branches']
-
+            
+            print('unify')
             # flag subbranch for deletition
             subbr['root'][0] = -1
     return treebranches
