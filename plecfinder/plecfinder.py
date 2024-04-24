@@ -185,12 +185,13 @@ def find_plecs(
             alpha=0.5,
             color=colors[i],
         )
-        
+    
+    for combbranch in combbranches:
         ax1.add_patch(
             Rectangle(
-                (combbranches[0], combbranches[2]),
-                (combbranches[1] - combbranches[0]),
-                (combbranches[3] - combbranches[2]),
+                (combbranch[0], combbranch[2]),
+                (combbranch[1] - combbranch[0]),
+                (combbranch[3] - combbranch[2]),
                 edgecolor="black",
                 facecolor="none",
                 fill=False,
