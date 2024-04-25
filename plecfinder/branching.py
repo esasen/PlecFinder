@@ -123,12 +123,11 @@ def connect_branchtrees(treeroots,branches,combine_dist,disc_len):
     return unified_treeroots,extended_branches
 
 
-def number_of_branches(topol, min_downstream_writhe: float = 0) -> List[int]: 
-    # treeroots, branches = build_branchtree(topol)
-    return [len(looplevels) for looplevels in endloop_levels(topol, min_downstream_writhe)]
+def number_of_branches(treeroots, min_downstream_writhe: float = 0) -> List[int]: 
+    return [len(looplevels) for looplevels in endloop_levels(treeroots, min_downstream_writhe)]
 
 
-def endloop_levels(topol, min_downstream_writhe: float = 0) -> List[int]:
+def endloop_levels(treeroots, min_downstream_writhe: float = 0) -> List[int]:
     def _move_downstream(treebranch,level):
         sbs = [sb for sb in treebranch['branches'] if _valid_downstream_branch(sb,min_downstream_writhe)]
         if len(sbs) == 0:
@@ -141,7 +140,6 @@ def endloop_levels(topol, min_downstream_writhe: float = 0) -> List[int]:
                 partial_endloops += _move_downstream(sb,level+1)
             return partial_endloops
             
-    treeroots, branches = build_branchtree(topol)
     plec_endloops=[_move_downstream(treeroot,0) for treeroot in treeroots if _valid_downstream_branch(treeroot,min_downstream_writhe)]
     return plec_endloops
 
