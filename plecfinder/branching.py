@@ -124,7 +124,7 @@ def connect_branchtrees(treeroots,branches,combine_dist,disc_len):
 
 
 def number_of_branches(topol, min_downstream_writhe: float = 0) -> List[int]: 
-    treeroots, branches = build_branchtree(topol)
+    # treeroots, branches = build_branchtree(topol)
     return [len(looplevels) for looplevels in endloop_levels(topol, min_downstream_writhe)]
 
 
