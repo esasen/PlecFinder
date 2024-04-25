@@ -11,10 +11,9 @@ from .plecfinder import cal_disc_len
 from .tofile import save_topol, load_topol
 from .plottopol import plot_topol
 from .plottopol import plot_single
-from .branching import build_branchtree
-from .branching import find_endloops
 from .connectplecs import connect_plecs
 from .testrun import testrun
+from .branching import build_branchtree, find_endloops, connect_branchtrees, number_of_branches, endloop_levels, unify_branch_pieces, plot_branchtree
 
 ##################################
 # writhe calculation
